@@ -7,6 +7,8 @@ const {
   deleteBlog,
   toggleLike,
   addComment,
+  updateViews,
+  getComments,
 } = require('../controllers/blogController');
 const auth = require('../middleware/auth');
 const { upload } = require('../middleware/multer');
@@ -41,15 +43,26 @@ router.delete('/:id', auth, deleteBlog);
 // @route   POST /api/blogs/:id/like
 // @desc    Like/Unlike blog
 // @access  Private
-router.post('/:id/like', auth, toggleLike);
+router.post('/:id/toggle-like', auth, toggleLike);
 
 // @route   POST /api/blogs/:id/comment
 // @desc    Add comment to blog
 // @access  Private
-router.post('/:id/comment', auth, addComment);
+router.post('/:id/add-comment', auth, addComment);
+
+// @route   POST /api/blogs/:id/views
+// @desc    Update views count
+// @access  Private 
+router.put('/:id/views', auth, updateViews);
 
 // @route   POST /api/blogs/upload-image
 // @desc    Upload featured image
+// @access  Private
+
+
+router.get('/:id/comments', auth, getComments);
+// @route   GET /api/blogs/:id/comments
+// @desc    Get all comments with populate author in particular blog
 // @access  Private
 
 module.exports = router;

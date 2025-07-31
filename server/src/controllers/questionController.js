@@ -4,6 +4,29 @@ const Subtopic = require("../models/Subtopic");
 const Progress = require("../models/Progress");
 
 // Get all questions
+const getAllQuestions = async (req, res) => {
+  try {
+    const questions = await Question.find()
+      .populate("topicId", "title category")
+      .populate("subtopicId", "title")
+      .populate("createdBy", "username firstName lastName")
+      .sort({ createdAt: -1 });
+    res.json({
+      success: true,
+      questions,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error getting questions",
+      error: error.message,
+    });
+    
+  }
+}
+
+// get qustions of topic and subtopic
 const getQuestions = async (req, res) => {
   try {
     const {
@@ -106,12 +129,12 @@ const createQuestion = async (req, res) => {
   try {
     const questionData = {
       ...req.body,
-      subtopicId: req.params.subtopicId,
       createdBy: req.user.id,
     };
+    const {topicId, subtopicId} = req.body;
 
     // get subtopic 
-    const subtopic = await Subtopic.findById(req.params.subtopicId);
+    const subtopic = await Subtopic.findById(subtopicId);
     if (!subtopic) {
       return res.status(404).json({
         success: false,
@@ -152,6 +175,7 @@ const updateQuestion = async (req, res) => {
         message: "Question not found",
       });
     }
+    
 
     res.json({
       success: true,
@@ -180,7 +204,8 @@ const deleteQuestion = async (req, res) => {
     }
 
     // Delete related progress
-    await Progress.deleteMany({ question: req.params.id });
+  await Progress.deleteMany({ completedQuestions: req.params.id });
+
 
     res.json({
       success: true,
@@ -396,6 +421,7 @@ const getRandomQuestions = async (req, res) => {
 };
 
 module.exports = {
+  getAllQuestions,
   getQuestions,
   getQuestionById,
   createQuestion,

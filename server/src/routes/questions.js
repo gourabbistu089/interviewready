@@ -8,7 +8,8 @@ const {
   submitAnswer,
   getRandomQuestions,
   toggleSaveQuestion,
-  getSavedQuestions
+  getSavedQuestions,
+  getAllQuestions
 } = require('../controllers/questionController');
 const { validate, questionValidationRules } = require('../middleware/validation');
 const auth = require('../middleware/auth');
@@ -17,9 +18,16 @@ const adminAuth = require('../middleware/adminAuth');
 const router = express.Router();
 
 // @route   GET /api/questions
-// @desc    Get all questions
+// @desc    Get  questions by subtopic or topic
 // @access  Public
 router.get('/', getQuestions);
+
+// get all questions
+// @route   GET /api/questions/all
+// @desc    Get all questions
+// @access  Public
+router.get('/all', getAllQuestions);
+
 
 // @route   GET /api/questions/random
 // @desc    Get random questions
@@ -31,15 +39,15 @@ router.get('/random', getRandomQuestions);
 // @access  Public 
 router.get('/:id', getQuestionById);
 
-// @route   POST /api/questions/:subtopicId
+// @route   POST /api/questions
 // @desc    Create question
 // @access  Private (Admin only)
-router.post('/:subtopicId', adminAuth,  createQuestion);
+router.post('/', adminAuth,  createQuestion);
 
 // @route   PUT /api/questions/:id
 // @desc    Update question
 // @access  Private (Admin only)
-router.put('/:id', adminAuth, validate(questionValidationRules()), updateQuestion);
+router.put('/:id', adminAuth, updateQuestion);
 
 // @route   DELETE /api/questions/:id
 // @desc    Delete question

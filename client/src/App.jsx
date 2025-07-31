@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -12,13 +11,16 @@ import LearningPage from "./pages/LearningPage";
 import PracticePage from "./pages/PracticePage";
 import MockInterviewPage from "./pages/MockInterviewPage";
 import BlogPage from "./pages/BlogPage";
-import SavedQuestionsPage from "./pages/SavedQuestionsPage";
-import AdminPanelPage from "./pages/AdminPanelPage";
+import AdminPanelPage from "./pages/AdminPanelPage.jsx";
 import { useEffect } from "react";
 import { setTopics } from "./redux/features/topicSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { API_URL } from "./constants";
+import { setUser } from "./redux/features/authSlice.js";
+import OpenRoute from "./components/OpenRoute.jsx";
+import CreateBlog from "./pages/CreateBlog.jsx";
+import Blog from "./pages/Blog.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +28,7 @@ function App() {
     let allTopics = [];
     try {
       const response = await axios.get(`${API_URL}/topics`);
-      console.log("response in app", response);
+      // console.log("response in app", response);
       if (response.data.success) {
         allTopics = response.data.topics || [];
         if (allTopics.length > 0) {
@@ -37,8 +39,26 @@ function App() {
       console.error("Error fetching topics:", error);
     }
   };
+  const getUser = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      let user = null;
+      if (response?.data?.success) {
+        user = response?.data?.user;
+      }
+      dispatch(setUser(user));
+      console.log("response in app user", response);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
   useEffect(() => {
-   fetchTopics();
+    getUser();
+    fetchTopics();
   }, []);
 
   return (
@@ -48,8 +68,16 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={
+              <OpenRoute>
+                <LoginPage />
+              </OpenRoute>
+            } />
+            <Route path="/register" element={
+              <OpenRoute>
+                <RegisterPage />
+              </OpenRoute>
+            } />
             <Route
               path="/dashboard"
               element={
@@ -91,10 +119,18 @@ function App() {
               }
             />
             <Route
-              path="/saved"
+              path="/blog/:id"
               element={
                 <ProtectedRoute>
-                  <SavedQuestionsPage />
+                  <Blog />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-blog"
+              element={
+                <ProtectedRoute>
+                  <CreateBlog />
                 </ProtectedRoute>
               }
             />
@@ -108,7 +144,7 @@ function App() {
             />
           </Routes>
         </main>
-        <Footer />
+        {/* <Footer /> */}
         <Toaster
           position="top-right"
           toastOptions={{

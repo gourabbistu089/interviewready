@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import PracticeResourceTable from "../components/PracticeResourceTable";
+import axios from "axios";
+import { API_URL } from "../constants";
 const ICON_MAP = {
   Search,
   BookOpen,
@@ -62,15 +64,16 @@ function PracticePage() {
   const [filteredResources, setFilteredResources] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [questionProgress, setQuestionProgress] = useState([]);
 
   const topicsData = useSelector((state) => state.topics.topics);
-  console.log("topicsData from redux", topicsData);
+  // console.log("topicsData from redux", topicsData);
   useEffect(() => {
     if (topicsData && topicsData.length > 0) {
       const practiceTopics = topicsData.filter(
         (topic) => topic.practiceTopics === true
       );
-      console.log("nonPracticeTopics", practiceTopics);
+      // console.log("nonPracticeTopics", practiceTopics);
       setTopics(practiceTopics); // Set only practice topics
       setSelectedTopic(practiceTopics[0]); // Set the first topic as selected by default
       setSubtopics(practiceTopics[0].subTopics || []); // Set subtopics of the first topic by default
@@ -79,11 +82,13 @@ function PracticePage() {
     }
   }, [topicsData]);
 
-  console.log("topics", topics);
-  console.log("selectedTopic", selectedTopic);
-  console.log("subtopics", subtopics);
-  console.log("filteredResources", filteredResources);
-  console.log("questions", questions);
+  // console.log("topics", topics);
+  // console.log("selectedTopic", selectedTopic);
+  // console.log("subtopics", subtopics);
+  // console.log("filteredResources", filteredResources);
+  // console.log("questions", questions);
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="flex">
@@ -162,7 +167,7 @@ function PracticePage() {
             <div className="flex items-center space-x-3 mb-4">
               <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl">
                 {/* <Target className="h-6 w-6 text-white" /> */}
-                <BookOpen className="h-6 w-6 text-white" /> 
+                <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-slate-800">
@@ -198,12 +203,51 @@ function PracticePage() {
             </div> */}
           </div>
 
-          {/* Filters */}
+          {/* Search */}
 
-          {/* Topics/Sections */}
-
-          <PracticeResourceTable filteredResources={filteredResources}/>
-       
+          <div className="mb-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search resources..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  if (e.target.value === "") {
+                    setFilteredResources(subtopics);
+                    return;
+                  }
+                  const filtered = filteredResources.filter((resource) =>
+                    resource.title
+                      .toLowerCase()
+                      .includes(e.target.value.toLowerCase())
+                  );
+                  setFilteredResources(filtered);
+                }}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          {filteredResources.length > 0 ? (
+            <>
+              <PracticeResourceTable
+                filteredResources={filteredResources}
+              />
+            </>
+          ) : (
+            <>
+              <div className="text-center py-12">
+                <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No resources found
+                </h3>
+                <p className="text-gray-600">
+                  Try adjusting your search or select a different topic.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

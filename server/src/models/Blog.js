@@ -8,7 +8,7 @@ const blogSchema = new mongoose.Schema({
   },
   slug: {
     type: String,
-    required: [true, 'Blog slug is required'],
+    // required: [true, 'Blog slug is required'],
     unique: true,
     lowercase: true
   },
@@ -24,7 +24,7 @@ const blogSchema = new mongoose.Schema({
   },
   featuredImage: {
     type: String,
-    default: ''
+    default: 'https://img.freepik.com/free-photo/online-message-blog-chat-communication-envelop-graphic-icon-concept_53876-139717.jpg'
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +34,7 @@ const blogSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Blog category is required'],
-    enum: ['Technology', 'Programming', 'Web Development', 'Data Science', 'Interview Tips', 'Career Advice', 'Technical Insights', 'Industry News', 'Success Stories', 'Tutorials', 'Best Practices','Others'],
+    enum: ['Technology', 'Programming', 'Web Development', 'Data Science', 'Interview Tips', , 'Computer Science', 'Tutorials', 'Best Practices','Others'],
     default: 'Technology'
   },
   tags: [{
@@ -65,7 +65,7 @@ const blogSchema = new mongoose.Schema({
     }
   }],
   comments: [{
-    user: {
+    author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
@@ -110,6 +110,17 @@ blogSchema.pre('save', function(next) {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
+  }
+  next();
+});
+
+// create readtime from content
+blogSchema.pre('save', function(next) {
+  if (this.isModified('content')) {
+    const content = this.content;
+    const words = content.split(' ');
+    const readTime = Math.ceil(words.length / 200);
+    this.readTime = readTime;
   }
   next();
 });

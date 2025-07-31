@@ -1,4 +1,3 @@
-// src/models/Subtopic.js
 const mongoose = require('mongoose');
 
 const subtopicSchema = new mongoose.Schema({
@@ -23,44 +22,15 @@ const subtopicSchema = new mongoose.Schema({
     required: true
   },
   content: {
-    // YouTube video links
-    youtubeLinks: [{
-      title: String,
-      url: String,
-      duration: String, // e.g., "15:30"
-      thumbnail: String
-    }],
-    // Notes links (external or internal)
-    notesLinks: [{
-      title: String,
-      url: String,
-      type: {
-        type: String,
-        enum: ['external', 'internal', 'pdf']
-      }
-    }],
-    // Handwritten PDF files (Google Drive links)
-    handwrittenPDFs: [{
-      title: String,
-      driveUrl: String,
-      fileName: String
-    }],
-    // Additional reading materials
-    readingMaterials: [{
-      title: String,
-      url: String,
-      type: {
-        type: String,
-        enum: ['article', 'documentation', 'book', 'tutorial']
-      }
-    }],
-    // Code examples
-    codeExamples: [{
-      title: String,
-      language: String,
-      code: String,
-      explanation: String
-    }]
+    youtubeLinks: {
+      url: String
+    },
+    notesLinks: {
+      url: String
+    },
+    handwrittenPDFs: {
+      url: String
+    }
   },
   questions: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -72,8 +42,8 @@ const subtopicSchema = new mongoose.Schema({
     default: 'easy'
   },
   estimatedTime: {
-    type: String, // e.g., "2 hours", "1 day"
-    default: '1 hour'
+    type: String,
+    default: '30 minutes'
   },
   order: {
     type: Number,
@@ -83,17 +53,11 @@ const subtopicSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  estimatedTime: {
-    type: String,
-    default: '30 minutes'
-  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  },
-}, {
-  timestamps: true
-});
+  }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Subtopic', subtopicSchema);

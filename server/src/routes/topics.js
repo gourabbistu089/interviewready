@@ -10,7 +10,8 @@ const {
   getSubtopic,
   createSubtopic,
   updateSubtopic,
-  deleteSubtopic
+  deleteSubtopic,
+  getAllSubtopics
 } = require('../controllers/topicController');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
@@ -21,6 +22,7 @@ const router = express.Router();
 // @desc    Get all topics
 // @access  Public
 router.get('/', getTopics);
+router.get('/subtopics', getAllSubtopics);
 
 // @route   GET /api/topics/categories
 // @desc    Get topic categories
@@ -61,7 +63,7 @@ router.get('/subtopics/:id', getSubtopic);
 // @desc    Create subtopic (Admin only)
 // @route   POST /api/topics/:id/subtopics
 // @access  Private/Admin
-router.post('/:id/subtopics', adminAuth, createSubtopic);
+router.post('/subtopics', adminAuth, createSubtopic);
 
 // @desc    Update subtopic (Admin only)
 // @route   PUT /api/topics/subtopics/:id

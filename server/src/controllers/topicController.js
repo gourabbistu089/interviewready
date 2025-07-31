@@ -18,7 +18,7 @@ const getTopics = async (req, res) => {
     }
 
     const topics = await Topic.find(query)
-      .select("title description icon color practiceTopics") // select only needed fields
+      .select("title description icon color practiceTopics difficulty estimatedTime category order isActive")
       .lean()
       .populate({
         path: "subTopics",
@@ -47,6 +47,27 @@ const getTopics = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error getting topics",
+      error: error.message,
+    });
+  }
+};
+
+// get all subtopics
+const getAllSubtopics = async (req, res) => {
+  try {
+    const subtopics = await Subtopic.find({ isActive: true })
+      .populate("topicId", "title description")
+      .populate("createdBy", "username firstName lastName")
+      .sort({ order: 1 });
+
+    res.json({
+      success: true,
+      subtopics,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error getting subtopics",
       error: error.message,
     });
   }
@@ -269,7 +290,8 @@ const getSubtopic = async (req, res) => {
 const createSubtopic = async (req, res) => {
   try {
     // Get the topic to which this subtopic belongs
-    const topic = await Topic.findById(req.params.id);
+    const {topicId} = req.body;
+    const topic = await Topic.findById(topicId);
     if (!topic) {
       return res.status(404).json({
         success: false,
@@ -280,7 +302,7 @@ const createSubtopic = async (req, res) => {
     const subtopic = await Subtopic.create({
       ...req.body,
       createdBy: req.user.id,
-      topicId: req.params.id,
+      // topicId: req.params.id,
     });
 
     // Update the topic's subTopics array
@@ -342,17 +364,12 @@ const updateSubtopic = async (req, res) => {
 // @access  Private/Admin
 const deleteSubtopic = async (req, res) => {
   try {
-    const subtopic = await Subtopic.findByIdAndUpdate(
-      req.params.id,
-      { isActive: false },
-      { new: true }
-    );
-
+    const subtopic = await Subtopic.findByIdAndDelete(req.params.id);
     if (!subtopic) {
       return res.status(404).json({
         success: false,
         message: "Subtopic not found",
-      });
+      }); 
     }
 
     res.json({
@@ -379,4 +396,5 @@ module.exports = {
   createSubtopic,
   updateSubtopic,
   deleteSubtopic,
+  getAllSubtopics,
 };

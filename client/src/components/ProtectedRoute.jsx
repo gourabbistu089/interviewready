@@ -5,9 +5,10 @@ import { useSelector } from 'react-redux';
 
 
 
-const ProtectedRoute= ({ children, adminOnly = false }) => {
+const ProtectedRoute= ({ children }) => {
   const { user, loading } = useSelector((state) => state.auth);
-  console.log("loading", loading);
+  const token = localStorage.getItem("token");
+  console.log("user in protected route", user, "loading", loading);
 
   if (loading) {
     return (
@@ -17,13 +18,10 @@ const ProtectedRoute= ({ children, adminOnly = false }) => {
     );
   }
 
-  if (!user) {
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  if (adminOnly && user.role !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
-  }
 
   return <>{children}</>;
 };

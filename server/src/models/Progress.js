@@ -1,81 +1,71 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const progressSchema = new mongoose.Schema({
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
-  topic: {
+  topicId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Topic',
-    required: true
+    ref: "Topic",
+    // required: true,
   },
-  subtopic: {
+  subtopicId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subtopic'
+    ref: "Subtopic",
+    // required: true,
   },
-  question: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Question'
+  // Track completed subtopics under this topic
+  completedSubtopics: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subtopic",
+    },
+  ],
+  // Track completed questions under each subtopic
+  completedQuestions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question",
+    },
+  ],
+  // Interview progress
+  isInterviewProgress: {
+    type: Boolean,
+    default: false,
   },
-  type: {
+  role:{
     type: String,
-    enum: ['topic', 'subtopic', 'question', 'mock-interview'],
-    required: true
   },
-  status: {
-    type: String,
-    enum: ['not-started', 'in-progress', 'completed', 'mastered'],
-    default: 'not-started'
-  },
-  score: {
+  totalSessions: {
     type: Number,
-    min: 0,
-    max: 100
+    default: 0,
   },
-  attempts: {
+  averageScore: {
     type: Number,
-    default: 0
+    default: 0,
   },
-  timeSpent: {
-    type: Number, // in minutes
-    default: 0
-  },
-  lastAttempt: {
-    type: Date
-  },
-  completedAt: {
-    type: Date
-  },
-  notes: {
-    type: String,
-    trim: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  improvementTrend: [
+  {
+    score: {
+      type: Number,
+      default: 0,
+    },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
   }
+  ],
+  lastUpdated: {
+    type: Date,
+    default: Date.now,
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// Update updatedAt field before saving
-progressSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  
-  // Set completedAt when status changes to completed or mastered
-  if (this.isModified('status') && (this.status === 'completed' || this.status === 'mastered') && !this.completedAt) {
-    this.completedAt = Date.now();
-  }
-  
-  next();
-});
-
-// Create compound indexes for efficient queries
-progressSchema.index({ user: 1, topic: 1, type: 1 });
-progressSchema.index({ user: 1, status: 1 });
-
-module.exports = mongoose.model('Progress', progressSchema);
+module.exports = mongoose.model("Progress", progressSchema);

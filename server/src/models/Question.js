@@ -97,6 +97,16 @@ const questionSchema = new mongoose.Schema({
   timestamps: true
 });
 
+questionSchema.pre('save', function (next) {
+  if (this.type === 'multiple-choice' && this.options && Array.isArray(this.options)) {
+    const correctOption = this.options.find(opt => opt.isCorrect === true);
+    if (correctOption) {
+      this.correctAnswer = correctOption.text;
+    }
+  }
+  next();
+});
+
 // Index for efficient searching
 questionSchema.index({ topic: 1, difficulty: 1 });
 questionSchema.index({ tags: 1 });

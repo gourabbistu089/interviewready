@@ -1,5 +1,6 @@
 const Blog = require('../models/Blog');
 const { uploadOnCloudinary , deleteFromCloudinary} = require('../config/cloudinary');
+const User = require('../models/User');
 
 // Get all blogs
 const getBlogs = async (req, res) => {
@@ -23,6 +24,7 @@ const getBlogs = async (req, res) => {
 
     const blogs = await Blog.find(query)
       .populate('author', 'username firstName lastName profilePicture')
+      .populate('comments.author', 'username firstName lastName profilePicture')
       .sort({ publishedAt: -1, createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
@@ -88,10 +90,21 @@ const getBlogById = async (req, res) => {
 // Create blog
 const createBlog = async (req, res) => {
   try {
+    const { title, content, excerpt, category, tags, status, readTime } = req.body;
     const blogData = {
-      ...req.body,
+      title,
+      content,
+      excerpt,
+      category,
+      tags: tags ? JSON.parse(tags).map((tag) => tag.toLowerCase().trim()) : [],
+      status,
+      readTime,
       author: req.user.id
     };
+
+    const user = await User.findById(req.user.id);
+
+    
     const imgLocalPath = req.file?.path;
     if(!imgLocalPath) {
       return res.status(400).json({
@@ -104,6 +117,10 @@ const createBlog = async (req, res) => {
     blogData.featuredImage = featuredImage;
 
     const blog = await Blog.create(blogData);
+
+    user.stats.blogsWritten += 1;
+    user.activity.latestBlog = await blog._id;
+    await user.save();
 
     res.status(201).json({
       success: true,
@@ -261,7 +278,8 @@ const toggleLike = async (req, res) => {
 // Add comment
 const addComment = async (req, res) => {
   try {
-    const { content } = req.body;
+    const {content}  = req.body;
+    console.log("content", content);
     const blog = await Blog.findById(req.params.id);
 
     if (!blog) {
@@ -272,14 +290,14 @@ const addComment = async (req, res) => {
     }
 
     blog.comments.push({
-      user: req.user.id,
+      author: req.user.id,
       content
     });
 
     await blog.save();
 
     // Populate the new comment
-    await blog.populate('comments.user', 'username firstName lastName profilePicture');
+    await blog.populate('comments.author', 'username firstName lastName profilePicture');
 
     const newComment = blog.comments[blog.comments.length - 1];
 
@@ -297,6 +315,63 @@ const addComment = async (req, res) => {
   }
 };
 
+// update views count
+const updateViews = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: 'Blog not found'
+      });
+    }
+
+    blog.views += 1;
+    await blog.save();
+
+    res.json({
+      success: true,
+      message: 'Blog views updated successfully',
+      blog
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating views',
+      error: error.message
+    });
+  }
+};
+
+// fetch all comments with populate author in particular blog
+const getComments = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: 'Blog not found'
+      });
+    }
+
+    const comments = await Blog.findById(req.params.id)
+      .select('comments')
+      .populate('comments.author', 'username firstName lastName profilePicture');
+
+    res.json({
+      success: true,
+      comments
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error getting comments',
+      error: error.message
+    });
+  }
+};
 module.exports = {
   getBlogs,
   getBlogById,
@@ -305,4 +380,6 @@ module.exports = {
   deleteBlog,
   toggleLike,
   addComment,
+  updateViews,
+  getComments
 };

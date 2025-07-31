@@ -22,13 +22,15 @@ import {
   ScrollText
 
 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../redux/features/authSlice';
 
-const Header: React.FC = () => {
+const Header= () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { user, logout } = useSelector((state: any) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
@@ -36,10 +38,9 @@ const Header: React.FC = () => {
     { name: 'Practice', href: '/practice', icon : Code2 },
     { name: 'Mock Interview', href: '/mock-interview', icon: Brain },
     { name: 'Blog', href: '/blog', icon: ScrollText  },
-    { name: 'Saved', href: '/saved', icon: Bookmark },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header className="bg-white/90 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-50 shadow-sm">
@@ -84,16 +85,16 @@ const Header: React.FC = () => {
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="flex items-center space-x-3 px-4 py-2 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 transition-all duration-200 border border-gray-200"
                 >
-                  {user.avatar ? (
+                  {user.profilePicture ? (
                     <img 
-                      src={user.avatar} 
-                      alt={user.name}
+                      src={user.profilePicture} 
+                      alt={user.firstName}
                       className="h-8 w-8 rounded-full object-cover"
                     />
                   ) : (
                     <User className="h-4 w-4" />
                   )}
-                  <span className="text-sm font-medium hidden sm:block">{user.name}</span>
+                  <span className="text-sm font-medium hidden sm:block">{user.firstName + ' ' + user.lastName}</span>
                 </button>
                 
                 {isUserMenuOpen && (
@@ -117,7 +118,7 @@ const Header: React.FC = () => {
                     )}
                     <button
                       onClick={() => {
-                        logout();
+                        dispatch(logout());
                         setIsUserMenuOpen(false);
                       }}
                       className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"

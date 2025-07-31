@@ -60,7 +60,12 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     // Find user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
+    // .populate("activity.latestBlog")
+    .populate("activity.latestSubtopic")
+    .populate("activity.latestInterviewSession")
+    .populate("activity.latestQuestion")
+    // console.log("user in login", user);
 
     if (!user) {
       return res.status(401).json({
@@ -105,18 +110,10 @@ const login = async (req, res) => {
       success: true,
       message: 'Login successful',
       token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        fullName: user.fullName,
-        role: user.role,
-        profilePicture: user.profilePicture,
-      }
+      user
     });
   } catch (error) {
+    console.log("error", error);
     res.status(500).json({
       success: false,
       message: 'Server error during login',
@@ -128,21 +125,15 @@ const login = async (req, res) => {
 // Get current user
 const getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id)
+    .populate("activity.latestSubtopic")
+    .populate("activity.latestInterviewSession")
+    .populate("activity.latestQuestion")
+    .populate("activity.latestBlog");
 
     res.json({
       success: true,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        fullName: user.fullName,
-        role: user.role,
-        profilePicture: user.profilePicture,
-        lastLogin: user.lastLogin
-      }
+      user
     });
   } catch (error) {
     res.status(500).json({
