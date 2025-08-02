@@ -97,7 +97,7 @@ const DashboardPage = () => {
       time: user?.activity?.latestInterviewSession?.endTime,
       status: "completed",
       difficulty: "medium",
-      score: 88,
+      // score: 88,
       icon: Users,
     },
 
@@ -179,6 +179,7 @@ const DashboardPage = () => {
     }
   };
 
+  console.log("Recent Activity:", recentActivity);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -318,12 +319,12 @@ const DashboardPage = () => {
                   <Activity className="h-6 w-6 mr-3 text-blue-500" />
                   Recent Activity
                 </h2>
-                <Link
+                {/* <Link
                   to="/activity"
                   className="text-sm text-indigo-600 hover:text-indigo-500 font-semibold hover:underline"
                 >
                   View all →
-                </Link>
+                </Link> */}
               </div>
               <div className="space-y-3 max-h-96 overflow-y-auto overflow-x-hidden 
                [&::-webkit-scrollbar]:w-2 
@@ -334,7 +335,7 @@ const DashboardPage = () => {
                 {recentActivity.map((activity, index) => {
                   const Icon = activity.icon;
                   return (
-                    (activity.title && activity.topic) &&
+                    (activity.title || activity.topic) &&
                     <div
                       key={index}
                       className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-102"
