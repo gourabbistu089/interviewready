@@ -88,6 +88,10 @@ const questionSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  isRevision: {
+  type: Boolean,
+  default: false
+},
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -22,7 +22,7 @@ const PracticeResourceTable = ({ filteredResources }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+          className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-y-auto max-h-screen"
         >
           <div className="divide-y divide-gray-100">
             {filteredResources.map((topic, index) => (

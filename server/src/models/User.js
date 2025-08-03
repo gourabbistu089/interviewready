@@ -52,28 +52,33 @@ const userSchema = new mongoose.Schema({
   },
 
   // recent activity
-activity: {
-  latestBlog: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Blog",
-    default: null
+  activity: {
+    latestBlog: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Blog",
+      default: null,
+    },
+    latestSubtopic: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subtopic",
+      default: null,
+    },
+    latestInterviewSession: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "InterviewSession",
+      default: null,
+    },
+    latestQuestion: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question",
+      default: null,
+    },
   },
-  latestSubtopic: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Subtopic",
-    default: null
-  },
-  latestInterviewSession: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "InterviewSession",
-    default: null
-  },
-  latestQuestion: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Question",
-    default: null
-  }
-},
+  revisionQuestions: [
+    { type: mongoose.Schema.Types.ObjectId, 
+      ref: "Question" ,
+    },
+  ],
 
   isActive: {
     type: Boolean,

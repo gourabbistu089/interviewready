@@ -15,10 +15,18 @@ import {
   ExternalLink,
   Trophy,
   Zap,
+  Smile,
+  Meh,
+  Frown,
+  Code2,
+  PlayCircle,
+  FileText,
+  Star,
 } from "lucide-react";
 import axios from "axios";
 import { API_URL } from "../constants";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 const QuestionModule = ({
   topicIndex,
   topicId,
@@ -29,7 +37,7 @@ const QuestionModule = ({
   const [completedQuestions, setCompletedQuestions] = useState([]);
   const toggleTopic = (topicId) => {
     setExpandedTopics((prev) => ({
-    //   ...prev,  // this will update the entire object, which is not what we want
+      //   ...prev,  // this will update the entire object, which is not what we want
       [topicId]: !prev[topicId],
     }));
   };
@@ -59,45 +67,62 @@ const QuestionModule = ({
   };
   const addToMarked = (questionId) => {
     if (completedQuestions.includes(questionId)) return;
-    setCompletedQuestions((prev) => 
-        [...prev, questionId]
-    );
+    setCompletedQuestions((prev) => [...prev, questionId]);
     // api call to update progress
     updateProgress(questionId, "question");
   };
 
-  const getDifficultyConfig = (difficulty) => {
+  const toggleRevisionAPI = async (questionId) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}/users/revision/${questionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message || "Revision status updated");
+      }
+    } catch (error) {
+      toast.error("Failed to add to revision list");
+      console.error("Error adding to revision list:", error);
+    }
+  };  
+
+  
+
+  // Function to get difficulty indicator
+  const getDifficultyIndicator = (difficulty) => {
     switch (difficulty) {
       case "easy":
-        return {
-          color:
-            "bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-800 border-emerald-300",
-          icon: Target,
-          shadow: "shadow-emerald-100",
-        };
+        return "border-l-4 border-l-green-400";
       case "medium":
-        return {
-          color:
-            "bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-800 border-amber-300",
-          icon: Zap,
-          shadow: "shadow-amber-100",
-        };
+        return "border-l-4 border-l-yellow-400";
       case "hard":
-        return {
-          color:
-            "bg-gradient-to-r from-red-50 to-pink-50 text-red-800 border-red-300",
-          icon: Trophy,
-          shadow: "shadow-red-100",
-        };
+        return "border-l-4 border-l-red-400";
       default:
-        return {
-          color:
-            "bg-gradient-to-r from-gray-50 to-slate-50 text-gray-800 border-gray-300",
-          icon: Target,
-          shadow: "shadow-gray-100",
-        };
+        return "border-l-4 border-l-gray-300";
     }
   };
+  const {user} = useSelector((state) => state.auth);
+
+  const [revisionQuestions, setRevisionQuestions] = useState([]);
+  useEffect(() => {
+    setRevisionQuestions(user?.revisionQuestions || []);
+  },[])
+
+  const toggleRevision = (questionId) => {
+    setRevisionQuestions((prev) =>
+      prev.includes(questionId)
+        ? prev.filter((id) => id !== questionId)
+        : [...prev, questionId]
+    );
+    toggleRevisionAPI(questionId);
+  };
+
 
   const getCompanyColor = (company, compIndex) => {
     const colors = [
@@ -144,21 +169,21 @@ const QuestionModule = ({
     return `${colorConfig.bg} ${colorConfig.text} ${colorConfig.border} ${colorConfig.shadow}`;
   };
 
-    const getProgressData = async () => {
+  const getProgressData = async () => {
     try {
       const res = await axios.get(`${API_URL}/progress/${topicId}/questions`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-     
+
       console.log("Response:", res);
       if (res.data.success) {
-      setCompletedQuestions(res?.data?.data[0]?.completedQuestions || []);
-      console.log(
-        "questionProgress in PracticePage",
-        res.data.data.completedQuestions
-      );
+        setCompletedQuestions(res?.data?.data[0]?.completedQuestions || []);
+        console.log(
+          "questionProgress in PracticePage",
+          res.data.data.completedQuestions
+        );
       }
     } catch (error) {
       console.error("Error fetching progress data:", error);
@@ -167,7 +192,7 @@ const QuestionModule = ({
 
   useEffect(() => {
     getProgressData();
-  },[])
+  }, []);
   console.log("Completed Questions: at ", topicIndex, completedQuestions);
   return (
     <motion.div
@@ -207,18 +232,14 @@ const QuestionModule = ({
             <div className="flex items-center space-x-4">
               <div className="text-right">
                 <div className="text-sm font-semibold text-gray-700 mb-1">
-                  {
-                    completedQuestions.length
-                  }
-                  /{topic.questions.length}
+                  {completedQuestions.length}/{topic.questions.length}
                 </div>
                 <div className="w-40 bg-gray-200 rounded-full h-2.5">
                   <div
                     className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2.5 rounded-full transition-all duration-500 shadow-sm"
                     style={{
                       width: `${
-                        (completedQuestions.length /
-                          topic.questions.length) *
+                        (completedQuestions.length / topic.questions.length) *
                         100
                       }%`,
                     }}
@@ -228,9 +249,7 @@ const QuestionModule = ({
               <div className="text-center">
                 <div className="text-lg font-bold text-gray-900">
                   {Math.round(
-                    (completedQuestions.length /
-                      topic.questions.length) *
-                      100
+                    (completedQuestions.length / topic.questions.length) * 100
                   )}
                   %
                 </div>
@@ -290,34 +309,40 @@ const QuestionModule = ({
                   <span className="text-sm font-bold text-gray-800">Notes</span>
                 </div>
                 <div className="col-span-1 text-center">
-                  <span className="text-sm font-bold text-gray-800">Level</span>
+                  <span className="text-sm font-bold text-gray-800">
+                    Revision
+                  </span>
                 </div>
               </div>
 
               {/* Table Rows */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {topic.questions.map((question, questionIndex) => (
-                
                   <motion.div
                     key={question._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: questionIndex * 0.1 }}
-                    className="grid grid-cols-12 gap-4 items-center px-5 py-4 bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100"
+                    className={`grid grid-cols-12 gap-6 items-center px-6 py-5 bg-white rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-xl hover:shadow-gray-100/50 ${getDifficultyIndicator(
+                      question.difficulty
+                    )}`}
                   >
-                    {/* <p>{typeof question._id}</p> */}
                     {/* Status Column */}
                     <div className="col-span-1 flex justify-center">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => addToMarked(question._id)}
-                        className="flex-shrink-0"
+                        className="relative group"
                       >
                         {completedQuestions.includes(question._id) ? (
-                          <CheckCircle className="w-5 h-5 text-emerald-500" />
+                          <div className="w-7 h-7 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center shadow-lg">
+                            <CheckCircle className="w-6 h-6 text-white" />
+                          </div>
                         ) : (
-                          <Circle className="w-5 h-5 text-gray-400 hover:text-emerald-500 transition-colors" />
+                          <div className="w-7 h-7 border-2 border-gray-300 rounded-full flex items-center justify-center group-hover:border-emerald-400 group-hover:bg-emerald-50 transition-all duration-200">
+                            <Circle className="w-5 h-5 text-gray-400 group-hover:text-emerald-500" />
+                          </div>
                         )}
                       </motion.button>
                     </div>
@@ -325,32 +350,44 @@ const QuestionModule = ({
                     {/* Problem Column */}
                     <div className="col-span-4">
                       <div className="space-y-3">
-                        <h4 className="text-lg font-bold text-gray-900 leading-tight">
+                        <h4 className="text-xl font-bold text-gray-800 leading-tight hover:text-gray-900 transition-colors">
                           {question.title}
                         </h4>
+
+                        {/* Topics */}
                         <div className="flex flex-wrap gap-2">
                           {question.topics.map((topic, topicIndex) => (
                             <span
                               key={topicIndex}
-                              className="px-2 py-1 bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-800 text-xs rounded-full font-semibold border border-purple-200 shadow-sm"
+                              className="px-2.5 py-1.5 bg-gradient-to-r from-violet-100 to-purple-100 text-violet-700 text-[9px] font-semibold rounded-full border border-violet-200/50 shadow-sm hover:shadow-md transition-shadow"
                             >
                               {topic}
                             </span>
                           ))}
                         </div>
+
+                        {/* Companies */}
                         <div className="flex flex-wrap gap-2">
-                          {question.company.map((comp, compIndex) => (
+                          {question.company
+                            .slice(0, 3)
+                            .map((comp, compIndex) => (
+                              <span
+                                key={compIndex}
+                                className={`inline-flex items-center px-2.5 py-1.5 text-xs font-semibold rounded-lg shadow-sm hover:shadow-md transition-all ${getCompanyColor(
+                                  comp,
+                                  compIndex
+                                )}`}
+                              >
+                                {comp}
+                              </span>
+                            ))}
+                          {question.company.length > 3 && (
                             <span
-                              key={compIndex}
-                              className={`inline-flex items-center px-2.5 py-1 text-sm rounded-lg font-semibold border shadow-sm ${getCompanyColor(
-                                comp,
-                                compIndex
-                              )}`}
+                              className={`inline-flex items-center px-3 py-1.5 text-sm font-semibold rounded-lg transition-all `}
                             >
-                              {/* <Users className="w-3.5 h-3.5 mr-1.5" /> */}
-                              {comp}
+                              +{question.company.length - 3}
                             </span>
-                          ))}
+                          )}
                         </div>
                       </div>
                     </div>
@@ -359,21 +396,22 @@ const QuestionModule = ({
                     <div className="col-span-2 flex justify-center">
                       {question.content.practiceLinks?.url ? (
                         <motion.a
-                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileHover={{ scale: 1.1, y: -3 }}
                           whileTap={{ scale: 0.95 }}
                           href={question.content.practiceLinks.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-800 rounded-xl hover:from-emerald-100 hover:to-green-100 transition-all duration-200 border border-emerald-300 shadow-sm hover:shadow-emerald-200 font-semibold"
+                          className="group relative"
                         >
-                          <Code className="w-4 h-4 mr-2" />
-                          Practice
-                          <ExternalLink className="w-3 h-3 ml-2" />
+                          <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-green-400 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:shadow-emerald-200">
+                            <Code2 className="w-6 h-6 text-white" />
+                          </div>
+                          {/* <div className="absolute -top-2 -right-2 w-4 h-4 bg-emerald-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div> */}
                         </motion.a>
                       ) : (
-                        <span className="text-gray-400 text-sm font-medium">
-                          Not Available
-                        </span>
+                        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-gray-200">
+                          <Code2 className="w-6 h-6 text-gray-400" />
+                        </div>
                       )}
                     </div>
 
@@ -381,21 +419,22 @@ const QuestionModule = ({
                     <div className="col-span-2 flex justify-center">
                       {question.content.youtubeLinks?.url ? (
                         <motion.a
-                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileHover={{ scale: 1.1, y: -3 }}
                           whileTap={{ scale: 0.95 }}
                           href={question.content.youtubeLinks.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-red-50 to-pink-50 text-red-800 rounded-xl hover:from-red-100 hover:to-pink-100 transition-all duration-200 border border-red-300 shadow-sm hover:shadow-red-200 font-semibold"
+                          className="group relative"
                         >
-                          <Play className="w-4 h-4 mr-2" />
-                          Video
-                          <ExternalLink className="w-3 h-3 ml-2" />
+                          <div className="w-12 h-12 bg-gradient-to-br from-red-400 via-pink-400 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:shadow-red-200">
+                            <PlayCircle className="w-6 h-6 text-white" />
+                          </div>
+                          {/* <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div> */}
                         </motion.a>
                       ) : (
-                        <span className="text-gray-400 text-sm font-medium">
-                          Not Available
-                        </span>
+                        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-gray-200">
+                          <PlayCircle className="w-6 h-6 text-gray-400" />
+                        </div>
                       )}
                     </div>
 
@@ -403,41 +442,56 @@ const QuestionModule = ({
                     <div className="col-span-2 flex justify-center">
                       {question.content.notesLinks?.url ? (
                         <motion.a
-                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileHover={{ scale: 1.1, y: -3 }}
                           whileTap={{ scale: 0.95 }}
                           href={question.content.notesLinks.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-300 shadow-sm hover:shadow-blue-200 font-semibold"
+                          className="group relative"
                         >
-                          <BookOpen className="w-4 h-4 mr-2" />
-                          Notes
-                          <ExternalLink className="w-3 h-3 ml-2" />
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 via-indigo-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:shadow-blue-200">
+                            <FileText className="w-6 h-6 text-white" />
+                          </div>
+                          {/* <div className="absolute -top-2 -right-2 w-4 h-4 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div> */}
                         </motion.a>
                       ) : (
-                        <span className="text-gray-400 text-sm font-medium">
-                          Not Available
-                        </span>
+                        <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-gray-200">
+                          <FileText className="w-6 h-6 text-gray-400" />
+                        </div>
                       )}
                     </div>
 
-                    {/* Difficulty Column */}
+                    {/* Star Column for Revision */}
                     <div className="col-span-1 flex justify-center">
-                      {(() => {
-                        const diffConfig = getDifficultyConfig(
-                          question.difficulty
-                        );
-                        const DiffIcon = diffConfig.icon;
-                        return (
-                          <span
-                            className={`inline-flex items-center px-3 py-2 text-sm rounded-xl font-bold border shadow-sm ${diffConfig.color} ${diffConfig.shadow}`}
-                          >
-                            <DiffIcon className="w-4 h-4 mr-1.5" />
-                            {question.difficulty.charAt(0).toUpperCase() +
-                              question.difficulty.slice(1)}
-                          </span>
-                        );
-                      })()}
+                      <motion.button
+                        whileHover={{ scale: 1.15 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => toggleRevision(question._id)}
+                        className="group relative"
+                      >
+                        <div
+                          className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                            revisionQuestions.includes(question._id)
+                              ? "bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-yellow-200"
+                              : "bg-gray-50 hover:bg-gray-100 border-2 border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          <Star
+                            className={`w-7 h-7 transition-all duration-200 ${
+                              revisionQuestions.includes(question._id)
+                                ? "text-white fill-white"
+                                : "text-gray-400 group-hover:text-yellow-500"
+                            }`}
+                          />
+                        </div>
+                        {revisionQuestions.includes(question._id) && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">
+                              ★
+                            </span>
+                          </div>
+                        )}
+                      </motion.button>
                     </div>
                   </motion.div>
                 ))}

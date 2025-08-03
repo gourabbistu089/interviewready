@@ -5,7 +5,8 @@ const {
   uploadProfilePicture,
   changePassword,
   getUserProgress,
-  deleteAccount
+  deleteAccount,
+  toggleRevisionQuestion
 } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 
@@ -36,9 +37,15 @@ router.put('/change-password', auth, changePassword);
 // @access  Private
 router.get('/progress/:id?', auth, getUserProgress);
 
+// @desc    Toggle revision question
+// @route   POST /api/users/revision/:questionId
+// @access  Private
+router.post('/revision/:questionId', auth, toggleRevisionQuestion);
+
 // @route   DELETE /api/users/account
 // @desc    Delete user account
 // @access  Private
 router.delete('/account', auth, deleteAccount);
+
 
 module.exports = router;

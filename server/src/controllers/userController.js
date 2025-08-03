@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Progress = require('../models/Progress');
 const cloudinary = require('../config/cloudinary');
 const multer = require('multer');
+const Question = require('../models/Question');
 
 // Configure multer for image uploads
 const storage = multer.memoryStorage();
@@ -291,11 +292,61 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+const toggleRevisionQuestion = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const questionId = req.params.questionId;
+
+    // Check if question exists
+    const question = await Question.findById(questionId);
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+
+    // Check if already saved
+    const isSaved = user.revisionQuestions.includes(questionId);
+
+    if (isSaved) {
+      // Remove from saved questions
+      user.revisionQuestions = user.revisionQuestions.filter(
+        id => id.toString() !== questionId
+      );
+      await user.save();
+
+      res.json({
+        success: true,
+        message: "Question removed from revision list",
+        revision: false,
+      });
+    } else {
+      // Add to revision questions
+      user.revisionQuestions.push(questionId);
+      await user.save();
+
+      res.json({
+        success: true,
+        message: "Question saved successfully",
+        revision: true,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getUserProfile,
   updateProfile,
   uploadProfilePicture,
   changePassword,
   getUserProgress,
-  deleteAccount
+  deleteAccount,
+  toggleRevisionQuestion
 };

@@ -420,6 +420,33 @@ const getRandomQuestions = async (req, res) => {
   }
 };
 
+// update isRevision field 
+const updateIsRevision = async (req, res) => {
+  try {
+    const { isRevision } = req.body;
+    const question = await Question.findById(req.params.id);
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+    question.isRevision = isRevision;
+    await question.save();
+    res.json({
+      success: true,
+      message: "Question updated successfully",
+      question,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error updating question",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAllQuestions,
   getQuestions,
@@ -431,4 +458,5 @@ module.exports = {
   getRandomQuestions,
   toggleSaveQuestion,
   getSavedQuestions,
+  updateIsRevision,
 };

@@ -18,8 +18,23 @@ const blogRoutes = require('./routes/blogs');
 const mockInterviewRoutes = require('./routes/mockInterview');
 const adminRoutes = require('./routes/admin');
 const progressRoutes = require('./routes/progress');
+const { addIsRevisionField, addRevisionQuestionsField } = require('./config/helper');
 
 const app = express();
+/*
+  addIsRevisionField().then(() => {
+  console.log('✅ isRevision field added to all questions');
+}).catch(err => {
+  console.error('Error adding isRevision field to questions:', err);
+});
+addRevisionQuestionsField().then(() => {
+  console.log('✅ revisionQuestions field added to all users');
+}).catch(err => {
+  console.error('Error adding revisionQuestions field to users:', err);
+  });
+  */
+
+
 
 // Security middleware
 app.use(helmet());
