@@ -21,9 +21,11 @@ import { setUser } from "./redux/features/authSlice.js";
 import OpenRoute from "./components/OpenRoute.jsx";
 import CreateBlog from "./pages/CreateBlog.jsx";
 import Blog from "./pages/Blog.jsx";
+import ApplicationLoader from "./components/ui/ApplicationLoader.jsx";
 
 function App() {
   const dispatch = useDispatch();
+  const [loading, setLoading] = React.useState(false);
   const fetchTopics = async () => {
     let allTopics = [];
     try {
@@ -56,10 +58,23 @@ function App() {
       console.error("Error fetching user:", error);
     }
   };
-  useEffect(() => {
-    getUser();
-    fetchTopics();
+  
+   useEffect(() => {
+    const initializeApp = async () => {
+      setLoading(true);
+      await Promise.all([getUser(), fetchTopics()]);
+      setLoading(false);
+    };
+
+    initializeApp();
   }, []);
+
+  // Show loading screen
+  if (loading) {
+    return (
+     <ApplicationLoader />
+    );
+  }
 
   return (
     <Router>
@@ -68,16 +83,22 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={
-              <OpenRoute>
-                <LoginPage />
-              </OpenRoute>
-            } />
-            <Route path="/register" element={
-              <OpenRoute>
-                <RegisterPage />
-              </OpenRoute>
-            } />
+            <Route
+              path="/login"
+              element={
+                <OpenRoute>
+                  <LoginPage />
+                </OpenRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <OpenRoute>
+                  <RegisterPage />
+                </OpenRoute>
+              }
+            />
             <Route
               path="/dashboard"
               element={
