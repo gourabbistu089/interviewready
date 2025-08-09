@@ -98,13 +98,13 @@ const QuestionModule = ({
   const getDifficultyIndicator = (difficulty) => {
     switch (difficulty) {
       case "easy":
-        return "border-l-4 border-l-green-400";
+        return "border-r-4 border-r-green-400";
       case "medium":
-        return "border-l-4 border-l-yellow-400";
+        return "border-r-4 border-r-yellow-400";
       case "hard":
-        return "border-l-4 border-l-red-400";
+        return "border-r-4 border-r-red-400";
       default:
-        return "border-l-4 border-l-gray-300";
+        return "border-r-4 border-r-gray-300";
     }
   };
   const {user} = useSelector((state) => state.auth);
@@ -353,18 +353,6 @@ const QuestionModule = ({
                         <h4 className="text-xl font-bold text-gray-800 leading-tight hover:text-gray-900 transition-colors">
                           {question.title}
                         </h4>
-
-                        {/* Topics */}
-                        <div className="flex flex-wrap gap-2">
-                          {question.topics.map((topic, topicIndex) => (
-                            <span
-                              key={topicIndex}
-                              className="px-2.5 py-1.5 bg-gradient-to-r from-violet-100 to-purple-100 text-violet-700 text-[9px] font-semibold rounded-full border border-violet-200/50 shadow-sm hover:shadow-md transition-shadow"
-                            >
-                              {topic}
-                            </span>
-                          ))}
-                        </div>
 
                         {/* Companies */}
                         <div className="flex flex-wrap gap-2">

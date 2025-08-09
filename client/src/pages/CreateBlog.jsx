@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBlog } from '../redux/features/blogSlice';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../constants';
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -148,7 +149,7 @@ const CreateBlog = () => {
         formDataToSend.append('featuredImage', formData.featuredImage);
       }
 
-      const response = await axios.post('http://localhost:5000/api/blogs', formDataToSend, {
+      const response = await axios.post(`${API_URL}/blogs`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
