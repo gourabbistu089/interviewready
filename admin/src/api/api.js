@@ -55,7 +55,7 @@ export const deleteTopic = (id) => apiConnector('DELETE', `/topics/${id}`);
 export const createSubtopic = (data) => apiConnector('POST', '/topics/subtopics', data);
 export const getSubtopics = () => apiConnector('GET', '/topics/subtopics');
 export const getSubtopicById = (id) => apiConnector('GET', `/subtopics/${id}`);
-export const updateSubtopic = (id, data) => apiConnector('PUT', `/subtopics/${id}`, data);
+export const updateSubtopic = (id, data) => apiConnector('PUT', `/topics/subtopics/${id}`, data);
 export const deleteSubtopic = (id) => apiConnector('DELETE', `/topics/subtopics/${id}`);
 
 // ✅ Questions CRUD
