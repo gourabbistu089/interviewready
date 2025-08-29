@@ -14,11 +14,13 @@ import {
   BookOpen,
   X
 } from 'lucide-react';
-import QuizComponent from '../pages/QuizComponent';
+import QuizComponent from '../pages/AiQuizPage';
 import { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 
-const LearningResourceTable = ({filteredResources,completedSubtopics, setCompletedSubtopics,updateProgress}) => {
+const LearningResourceTable = ({filteredResources,completedSubtopics, setCompletedSubtopics,updateProgress,selectedTopic}) => {
+  console.log("selectedTopic in ResourcesTable", selectedTopic);
   const [bookmarkedItems, setBookmarkedItems] = useState(new Set());
   const [completedItems, setCompletedItems] = useState(new Set());
   console.log("completedSubtopics in ResourcesTable", completedSubtopics);
@@ -225,16 +227,15 @@ useEffect(() => {
                       {/* Start Test Column */}
                       <td className="p-4">
                         <div className="flex justify-center">
-                          <button
-                            onClick={() =>{ setQuizData(resource.questions), setQuizeResource(resource)}}
-                            disabled={!resource.questions || resource.questions.length === 0}
+                          <NavLink
+                           to={'/ai-quiz/' + selectedTopic + '/' + resource.title}
                             className={`px-3 py-2 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-700 rounded-xl border border-purple-200/50 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 flex items-center space-x-2
                               disabled:opacity-50 disabled:cursor-not-allowed
                               `}
                           >
                             <Play className="h-4 w-4" />
                             <span className="text-sm font-medium">Start</span>
-                          </button>
+                          </NavLink>
                         </div>
                       </td>
                     </tr>
@@ -245,24 +246,6 @@ useEffect(() => {
           </div>
         </div>
       </div>
-
-      {/* Quiz Modal */}
-      {quizData && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          {/* <div className="absolute inset-0 bg-black opacity-50"></div> */}
-          {/* <div className="bg-whfite rounded-lg p-6 shadow-lg z-50"> */}
-            <QuizComponent questionsData={quizData} quizeResource={quizeResource} />
-          {/* </div> */}
-          <button
-            onClick={() => setQuizData(null)}
-            className="absolute top-10 right-10 flex items-center justify-center p-2 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 text-white transition-colors duration-200"
-          >
-            <span className="text-lg">Close</span>
-            {/* <X className="h-6 w-6" /> */}
-          </button>
-        </div>
-      )} 
-      
     </div>
   );
 };

@@ -22,6 +22,7 @@ import OpenRoute from "./components/OpenRoute.jsx";
 import CreateBlog from "./pages/CreateBlog.jsx";
 import Blog from "./pages/Blog.jsx";
 import ApplicationLoader from "./components/ui/ApplicationLoader.jsx";
+import AiQuizPage from "./pages/AiQuizPage.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -152,6 +153,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CreateBlog />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ai-quiz/:topic/:subtopic"
+              element={
+                <ProtectedRoute>
+                  <AiQuizPage />
                 </ProtectedRoute>
               }
             />

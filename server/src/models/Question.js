@@ -14,7 +14,7 @@ const questionSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['multiple-choice', 'true-false', 'short-answer', 'coding', 'essay'],
+    enum: ['coding', 'essay'],
     required: true
   },
   // Coding question specifics
@@ -52,23 +52,7 @@ const questionSchema = new mongoose.Schema({
     enum: ['easy', 'medium', 'hard'],
     required: true
   },
-  // For multiple choice questions
-  options: [{
-    text: String,
-    isCorrect: {
-      type: Boolean,
-      default: false
-    }
-  }],
-  // For other question types
-  correctAnswer: {
-    type: String,
-    trim: true
-  },
-  explanation: {
-    type: String,
-    trim: true
-  },
+
   // Additional metadata
   tags: [String],
   company: [String], // Which company asked this question
@@ -99,16 +83,6 @@ const questionSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
-});
-
-questionSchema.pre('save', function (next) {
-  if (this.type === 'multiple-choice' && this.options && Array.isArray(this.options)) {
-    const correctOption = this.options.find(opt => opt.isCorrect === true);
-    if (correctOption) {
-      this.correctAnswer = correctOption.text;
-    }
-  }
-  next();
 });
 
 // Index for efficient searching

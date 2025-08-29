@@ -1,11 +1,12 @@
 // backend/routes/test.js
 const express = require('express');
 const AIInterviewService = require('../services/aiService');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
 // Test question generation
-router.post('/generate-question', async (req, res) => {
+router.post('/generate-question', auth, async (req, res) => {
   try {
     const { role, questionNumber = 1 } = req.body;
 

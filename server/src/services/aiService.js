@@ -113,7 +113,7 @@ Return only the question text.
         .replace(/```\n?/g, "")
         .trim();
 
-        console.log("cleanedResponse", cleanedResponse);
+      console.log("cleanedResponse", cleanedResponse);
       try {
         const evaluationResult = JSON.parse(cleanedResponse);
         return evaluationResult;
@@ -143,7 +143,7 @@ Return only the question text.
         )
         .join("\n\n");
 
-     const prompt = `You are an AI interview coach. Based on the following interview results for a ${role} developer, generate a professional and friendly final feedback summary.
+      const prompt = `You are an AI interview coach. Based on the following interview results for a ${role} developer, generate a professional and friendly final feedback summary.
 
 Overall Score: ${overallScore}/10
 
@@ -158,7 +158,6 @@ Please provide the feedback in plain text only (no markdown, no bullets). Struct
 4. Recommended Next Steps
 
 Make the tone supportive, constructive, and easy to read. Avoid using complex language or formatting. Keep everything in plain, readable paragraphs.`;
-
 
       const response = await ai.models.generateContent({
         model: "gemini-2.0-flash-001",

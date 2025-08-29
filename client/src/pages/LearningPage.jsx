@@ -267,6 +267,7 @@ function LearningPage() {
                   completedSubtopics={completedSubtopics}
                   setCompletedSubtopics={setCompletedSubtopics}
                   updateProgress={updateProgress}
+                  selectedTopic={selectedTopic?.title}
                 />
               ) : (
                 <div className="text-center py-12">

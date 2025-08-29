@@ -18,23 +18,8 @@ const blogRoutes = require('./routes/blogs');
 const mockInterviewRoutes = require('./routes/mockInterview');
 const adminRoutes = require('./routes/admin');
 const progressRoutes = require('./routes/progress');
-const { addIsRevisionField, addRevisionQuestionsField } = require('./config/helper');
 
 const app = express();
-/*
-  addIsRevisionField().then(() => {
-  console.log('✅ isRevision field added to all questions');
-}).catch(err => {
-  console.error('Error adding isRevision field to questions:', err);
-});
-addRevisionQuestionsField().then(() => {
-  console.log('✅ revisionQuestions field added to all users');
-}).catch(err => {
-  console.error('Error adding revisionQuestions field to users:', err);
-  });
-  */
-
-
 
 // Security middleware
 app.use(helmet());
@@ -43,13 +28,6 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
-});
-// app.use('/api/', limiter);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -76,6 +54,7 @@ app.use('/api/mock-interviews', mockInterviewRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/interview', require('./routes/interview'));
+app.use('/api/ai-quiz', require('./routes/aiQuize'));
 // app.use('/api/progress', require('./routes/progress'));
 app.use('/api/test', require('./routes/test'));
 

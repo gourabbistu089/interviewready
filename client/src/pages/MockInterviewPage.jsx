@@ -1,26 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Play,
-  Clock,
-  User,
-  Award,
-  TrendingUp,
-  History,
-  CheckCircle,
-  XCircle,
-  ArrowRight,
-  ArrowLeft,
-  Star,
-  Target,
-  BookOpen,
-  Brain,
-} from "lucide-react";
-import { API_URL } from "../constants";
-import axios from "axios";
+import { Play, Award } from "lucide-react";
 import RoleSelection from "../components/Interview/RoleSelection";
 import InterviewSession from "../components/Interview/InterviewSession";
-
 
 // Results component
 const InterviewResults = ({ results, onNewInterview }) => {
@@ -83,16 +65,16 @@ const InterviewResults = ({ results, onNewInterview }) => {
           </div>
         </div>
 
-{results.finalFeedback && (
-  <div className="bg-blue-50 rounded-lg p-6 mb-6 text-left whitespace-pre-line">
-    <h3 className="text-lg font-semibold text-blue-900 mb-3">
-      Final Feedback
-    </h3>
-    <p className="text-blue-800 leading-relaxed">
-      {results.finalFeedback}
-    </p>
-  </div>
-)}
+        {results.finalFeedback && (
+          <div className="bg-blue-50 rounded-lg p-6 mb-6 text-left whitespace-pre-line">
+            <h3 className="text-lg font-semibold text-blue-900 mb-3">
+              Final Feedback
+            </h3>
+            <p className="text-blue-800 leading-relaxed">
+              {results.finalFeedback}
+            </p>
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
