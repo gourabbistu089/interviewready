@@ -8,7 +8,9 @@ import {
   RotateCcw,
   Loader2,
   BookOpenIcon,
+  Code,
 } from "lucide-react";
+import { Smile, Activity, Flame } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from '../constants';
@@ -250,7 +252,7 @@ const AiQuizPage = () => {
                 }`}
               >
                 <div className="flex flex-col items-center">
-                  <span className="text-2xl mb-1">😊</span>
+                  <span className="text-2xl mb-1"><Smile/></span>
                   <span>Easy</span>
                 </div>
               </button>
@@ -264,7 +266,7 @@ const AiQuizPage = () => {
                 }`}
               >
                 <div className="flex flex-col items-center">
-                  <span className="text-2xl mb-1">🤔</span>
+                  <span className="text-2xl mb-1"><Activity/></span>
                   <span>Medium</span>
                 </div>
               </button>
@@ -278,7 +280,7 @@ const AiQuizPage = () => {
                 }`}
               >
                 <div className="flex flex-col items-center">
-                  <span className="text-2xl mb-1">😤</span>
+                  <span className="text-2xl mb-1"><Flame/></span>
                   <span>Hard</span>
                 </div>
               </button>
@@ -429,6 +431,20 @@ const AiQuizPage = () => {
         <h3 className="text-xl font-semibold text-gray-800 mb-6">
           {currentQ.question}
         </h3>
+          {/* Code Display */}
+        {currentQ.code && (
+          <div className="mb-6">
+            <div className="flex items-center mb-3">
+              <Code className="w-5 h-5 text-gray-600 mr-2" />
+              <span className="text-sm font-medium text-gray-600">Code to analyze:</span>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-6 overflow-x-auto shadow-lg">
+              <pre className="text-sm text-gray-100 font-mono leading-relaxed">
+                <code>{currentQ.code}</code>
+              </pre>
+            </div>
+          </div>
+        )}
         <div className="space-y-3">
           {Object.entries(currentQ.options).map(([key, value]) => (
             <button

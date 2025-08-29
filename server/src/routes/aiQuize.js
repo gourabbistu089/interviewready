@@ -47,6 +47,7 @@ Format the response as a JSON array with this structure:
       "C": "Option C text",
       "D": "Option D text"
     },
+    "code": "Optional code snippet here if applicable, else null",
     "correctAnswer": "A",
     "explanation": "Brief explanation of why this is correct",
     "difficulty": "${difficulty}"
@@ -57,7 +58,8 @@ Generate questions now:`;
 
     // Call Gemini API
        const response = await genAI.models.generateContent({
-        model: "gemini-2.0-flash-001",
+        // model: "gemini-2.0-flash-001",
+        model: "gemini-2.5-pro",  // updated model
         contents: prompt,
       });
     let text = response.text;
