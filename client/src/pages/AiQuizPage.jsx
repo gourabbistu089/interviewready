@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
+import { API_URL } from '../constants';
 const AiQuizPage = () => {
   const [topics, setTopics] = useState({});
   const [selectedTopic, setSelectedTopic] = useState("");
@@ -47,7 +47,7 @@ const AiQuizPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/ai-quiz/generate-quiz",
+        API_URL+"/ai-quiz/generate-quiz",
         {
           topic: selectedTopic,
           subtopic: selectedSubtopic,
