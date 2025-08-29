@@ -95,7 +95,7 @@ router.post('/answer', auth, async (req, res) => {
 
     // Generate next question if not at limit
     console.log("session.questions.length", session.questions.length);
-    if (session.questions.length < 2) {
+    if (session.questions.length < 5) {
       nextQuestion = await AIInterviewService.generateQuestion(
         session.role,
         session.questions.length + 1

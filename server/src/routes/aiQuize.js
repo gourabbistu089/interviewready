@@ -12,7 +12,7 @@ const  genAI = new GoogleGenAI({
 // Quiz generation endpoint
 router.post('/generate-quiz', auth, async (req, res) => {
   try {
-    const { topic, subtopic, difficulty = ['easy', 'medium'], questionCount = 10 } = req.body;
+    const { topic, subtopic, difficulty = "easy", questionCount = 10 } = req.body;
 
     // Validate input
     if (!topic || !subtopic) {

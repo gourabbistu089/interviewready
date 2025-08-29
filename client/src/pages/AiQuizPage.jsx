@@ -16,7 +16,7 @@ const AiQuizPage = () => {
   const [topics, setTopics] = useState({});
   const [selectedTopic, setSelectedTopic] = useState("");
   const [selectedSubtopic, setSelectedSubtopic] = useState("");
-  const [difficulty, setDifficulty] = useState(["easy", "medium"]);
+  const [difficulty, setDifficulty] = useState("easy");
   const [questionCount, setQuestionCount] = useState(10);
   const [quiz, setQuiz] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -154,7 +154,7 @@ const AiQuizPage = () => {
     );
   }
 
-  if (!quiz) {
+ if (!quiz) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
         <div className="max-w-4xl mx-auto">
@@ -233,6 +233,62 @@ const AiQuizPage = () => {
             </div>
           </div>
 
+          {/* Difficulty Selection */}
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+              <div className="w-6 h-6 bg-gradient-to-r from-orange-400 to-red-500 rounded-full mr-3"></div>
+              Select Difficulty Level
+            </h2>
+
+            <div className="grid grid-cols-3 gap-4">
+              <button
+                onClick={() => setDifficulty('easy')}
+                className={`p-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-md ${
+                  difficulty === 'easy'
+                    ? 'bg-gradient-to-r from-green-400 to-green-600 text-white shadow-green-200'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:shadow-lg'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl mb-1">😊</span>
+                  <span>Easy</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setDifficulty('medium')}
+                className={`p-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-md ${
+                  difficulty === 'medium'
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-orange-200'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:shadow-lg'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl mb-1">🤔</span>
+                  <span>Medium</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setDifficulty('hard')}
+                className={`p-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-md ${
+                  difficulty === 'hard'
+                    ? 'bg-gradient-to-r from-red-500 to-red-700 text-white shadow-red-200'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:shadow-lg'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl mb-1">😤</span>
+                  <span>Hard</span>
+                </div>
+              </button>
+            </div>
+
+            <p className="text-center text-gray-500 mt-4 text-sm">
+              Selected: <span className="font-semibold capitalize text-gray-700">{difficulty}</span> level
+            </p>
+          </div>
+
           {/* Generate Button */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
             <button
@@ -253,7 +309,6 @@ const AiQuizPage = () => {
       </div>
     );
   }
-
   if (showResults) {
     const score = calculateScore();
     const percentage = Math.round((score / quiz.questions.length) * 100);
@@ -348,7 +403,7 @@ const AiQuizPage = () => {
   const currentQ = quiz.questions[currentQuestion];
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-6">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-gray-800">
