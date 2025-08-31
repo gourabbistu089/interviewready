@@ -105,6 +105,12 @@ const login = async (req, res) => {
     .populate("activity.latestInterviewSession")
     .populate("activity.latestQuestion")
     // console.log("user in login", user);
+    if(!user){
+      return res.status(401).json({
+        success: false,
+        message: 'User not found. Please register first.'
+      });
+    }
 
     if(!user.isVerified){
       return res.status(401).json({
