@@ -24,6 +24,7 @@ import CreateBlog from "./pages/CreateBlog.jsx";
 import Blog from "./pages/Blog.jsx";
 import ApplicationLoader from "./components/ui/ApplicationLoader.jsx";
 import AiQuizPage from "./pages/AiQuizPage.jsx";
+import CheatsheetApp from "./pages/CheatsheetApp.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -181,6 +182,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <BlogPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cheatsheet"
+              element={
+                <ProtectedRoute>
+                  <CheatsheetApp />
                 </ProtectedRoute>
               }
             />

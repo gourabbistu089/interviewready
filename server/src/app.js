@@ -19,7 +19,10 @@ const adminRoutes = require('./routes/admin');
 const progressRoutes = require('./routes/progress');
 const interviewRoutes = require('./routes/interview');
 const aiQuizRoutes = require('./routes/aiQuize');
+const cheatsheetRoutes = require('./routes/cheetsheet');
 const testRoutes = require('./routes/test');
+
+require('dotenv').config(); 
 
 const app = express();
 
@@ -55,6 +58,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/interview', interviewRoutes);
+app.use('/api/cheatsheets', cheatsheetRoutes);
 app.use('/api/ai-quiz', aiQuizRoutes);
 
 app.use('/api/test', testRoutes);

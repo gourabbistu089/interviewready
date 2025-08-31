@@ -91,8 +91,8 @@ const QuestionForm = ({ question, onClose }) => {
     defaultValues: question || {
       title: '',
       question: '',
-      type: 'multiple-choice',
-      topicId: '',
+      type: 'coding',
+      topicId: '686ec3159779930c5238b6df',
       subtopicId: '',
       difficulty: 'easy',
       options: [{ text: '', isCorrect: false }],
@@ -132,11 +132,9 @@ const QuestionForm = ({ question, onClose }) => {
   };
 
   const types = [
-    { value: 'multiple-choice', label: 'Multiple Choice', icon: CheckCircle },
-    { value: 'true-false', label: 'True/False', icon: Target },
-    { value: 'short-answer', label: 'Short Answer', icon: FileText },
+  
     { value: 'coding', label: 'Coding', icon: FileDown },
-    { value: 'essay', label: 'Essay', icon: BookOpen }
+    { value: 'sql', label: 'SQL', icon: BookOpen }
   ];
 
   const difficulties = [
@@ -328,135 +326,6 @@ const QuestionForm = ({ question, onClose }) => {
               </div>
             </div>
           </motion.div>
-
-          {/* Question Type Specific Fields */}
-          <AnimatePresence mode="wait">
-            {watchType === 'multiple-choice' && (
-              <motion.div
-                key="multiple-choice"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <h4 className="text-xl font-semibold text-gray-900">Multiple Choice Options</h4>
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    type="button"
-                    onClick={() => appendOption({ text: '', isCorrect: false })}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Option
-                  </motion.button>
-                </div>
-
-                <div className="space-y-4">
-                  {optionFields.map((field, index) => (
-                    <motion.div
-                      key={field.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border-2 border-transparent hover:border-blue-200 transition-all"
-                    >
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          {...register(`options.${index}.isCorrect`)}
-                          className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                        />
-                        <label className="ml-2 text-sm text-gray-600">Correct</label>
-                      </div>
-                      <input
-                        {...register(`options.${index}.text`, { required: 'Option text is required' })}
-                        placeholder={`Option ${index + 1}`}
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      />
-                      {optionFields.length > 1 && (
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          type="button"
-                          onClick={() => removeOption(index)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </motion.button>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {watchType === 'true-false' && (
-              <motion.div
-                key="true-false"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center gap-2">
-                  <Target className="w-5 h-5 text-blue-600" />
-                  <h4 className="text-xl font-semibold text-gray-900">True/False Answer</h4>
-                </div>
-                <div className="flex gap-6">
-                  <label className="flex items-center gap-3 p-4 bg-green-50 rounded-xl border-2 border-transparent hover:border-green-200 cursor-pointer transition-all">
-                    <input
-                      type="radio"
-                      {...register('correctAnswer', { required: 'Answer is required' })}
-                      value="true"
-                      className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300"
-                    />
-                    <span className="text-green-700 font-medium">True</span>
-                  </label>
-                  <label className="flex items-center gap-3 p-4 bg-red-50 rounded-xl border-2 border-transparent hover:border-red-200 cursor-pointer transition-all">
-                    <input
-                      type="radio"
-                      {...register('correctAnswer', { required: 'Answer is required' })}
-                      value="false"
-                      className="h-5 w-5 text-red-600 focus:ring-red-500 border-gray-300"
-                    />
-                    <span className="text-red-700 font-medium">False</span>
-                  </label>
-                </div>
-              </motion.div>
-            )}
-
-            {(watchType === 'short-answer' || watchType === 'coding' || watchType === 'essay') && (
-              <motion.div
-                key="text-answer"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-purple-600" />
-                  <h4 className="text-xl font-semibold text-gray-900">Expected Answer</h4>
-                </div>
-                <textarea
-                  {...register('correctAnswer')}
-                  rows={watchType === 'essay' ? 8 : 4}
-                  placeholder={
-                    watchType === 'coding' 
-                      ? 'Enter the expected code solution...'
-                      : watchType === 'essay'
-                      ? 'Enter evaluation criteria or sample answer...'
-                      : 'Enter the correct answer...'
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all resize-none"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Explanation */}
           <motion.div

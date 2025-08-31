@@ -19,7 +19,8 @@ import {
   Codepen,
   CodepenIcon,
   Newspaper ,
-  ScrollText
+  ScrollText,
+  Library
 
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,6 +39,7 @@ const Header= () => {
     { name: 'Practice', href: '/practice', icon : Code2 },
     { name: 'Mock Interview', href: '/mock-interview', icon: Brain },
     { name: 'Blog', href: '/blog', icon: ScrollText  },
+    { name: 'Cheatsheet', href: '/cheatsheet', icon: FileText  },
   ];
 
   const isActive = (path) => location.pathname === path;
