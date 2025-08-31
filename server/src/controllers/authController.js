@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
-
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 // Register user
 const register = async (req, res) => {
   try {
@@ -29,11 +30,27 @@ const register = async (req, res) => {
     });
 
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user._id,`5m`);
+    // send verification email
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // or use SendGrid, Mailgun, etc.
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      },
+    });
+    
+    const url = `${process.env.BACKEND_URL}/api/auth/verify/${token}`;
+
+    await transporter.sendMail({
+      to: email,
+      subject: "Verify Your Email",
+      html: `<h3>Click the link to verify:</h3> <a href="${url}">${url}</a>`,
+    });
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: "Registered successfully. Please check your email to verify!",
       token,
       user: {
         id: user._id,
@@ -55,10 +72,31 @@ const register = async (req, res) => {
   }
 };
 
+const verifyEmail = async (req, res) => {
+  try {
+    const token = req.params.token;
+    console.log("token in verifyEmail", token);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("decoded in verifyEmail", decoded);
+        const user = await User.findById(decoded.id);
+        console.log("user in auth middleware", user);
+    console.log("decoded in verifyEmail 🚀🚀🚀🚀", decoded);
+    // const user = await User.findById({ _id: decoded.id });
+    if (!user) return res.status(400).send("Invalid link || User not found");
+    
+    user.isVerified = true;
+    await user.save();
+    res.send("Email verified successfully ✅");
+  } catch (err) {
+    console.error("err in verifyEmail", err);
+    res.status(400).send("Invalid or expired link");
+  }
+}
+
 // Login user
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, expiredTime } = req.body;
 
     // Find user by email
     const user = await User.findOne({ email })
@@ -67,6 +105,13 @@ const login = async (req, res) => {
     .populate("activity.latestInterviewSession")
     .populate("activity.latestQuestion")
     // console.log("user in login", user);
+
+    if(!user.isVerified){
+      return res.status(401).json({
+        success: false,
+        message: 'Please verify your email before logging in.'
+      });
+    }
 
     if (!user) {
       return res.status(401).json({
@@ -98,7 +143,7 @@ const login = async (req, res) => {
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user._id,expiredTime);
 
     res
     .cookie('token', token, {
@@ -106,6 +151,7 @@ const login = async (req, res) => {
       secure: true,
       sameSite: 'strict',
       maxAge: 1000 * 60 * 60 * 24 * 30
+      // maxAge: 1000 * 60
     })
     .json({
       success: true,
@@ -167,6 +213,7 @@ const logout = async (req, res) => {
 
 module.exports = {
   register,
+  verifyEmail,
   login,
   getCurrentUser,
   logout

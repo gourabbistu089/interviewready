@@ -92,7 +92,7 @@ const DashboardPage = () => {
     },
     {
       type: "mock",
-      title: "Mock Interview",
+      title: user?.activity?.latestInterviewSession?.title &&  "Mock Interview: " + user?.activity?.latestInterviewSession?.role,
       topic: user?.activity?.latestInterviewSession?.role,
       time: user?.activity?.latestInterviewSession?.endTime,
       status: "completed",

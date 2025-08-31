@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [expiredTime, setExpiredTime] = useState('1m');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -25,7 +26,8 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      const res  = await axios.post(`${API_URL}/auth/login`, { email, password });
+      console.log("expiredTime", expiredTime);
+      const res  = await axios.post(`${API_URL}/auth/login`, { email, password, expiredTime});
       console.log('Login response:', res.data);
       // return;
       if (res.data.success) {
@@ -38,10 +40,15 @@ const LoginPage = () => {
         console.error('Login failed:', res.data.message);
       }
     } catch (error) {
-      toast.error('Login failed. Please check your credentials and try again.');
+      toast.error( (error.response?.data?.message ? ` ${error.response.data.message}` : 'An error occurred during login. Please try again.'));
       console.error('Login error:', error);
     } finally {
       setLoading(false);
+    }
+  };
+    const handleCheckbox = (e) => {
+    if(e.target.checked){
+      setExpiredTime('30d');
     }
   };
 
@@ -121,6 +128,7 @@ const LoginPage = () => {
                   <input
                     id="remember-me"
                     type="checkbox"
+                    onChange={handleCheckbox}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">

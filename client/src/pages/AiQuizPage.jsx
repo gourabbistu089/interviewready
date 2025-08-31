@@ -35,11 +35,6 @@ const AiQuizPage = () => {
     setSelectedSubtopic(subtopic);
   }, []);
 
-  console.log(
-    "selectedTopic, selectedSubtopic",
-    selectedTopic,
-    selectedSubtopic
-  );
 
   const generateQuiz = async () => {
     setLoading(true);
@@ -69,6 +64,7 @@ const AiQuizPage = () => {
       if (response.status !== 200) {
         throw new Error("Failed to generate quiz");
       }
+      console.log("Response", response);
 
       const quizData = await response.data;
       setQuiz(quizData);
@@ -440,7 +436,9 @@ const AiQuizPage = () => {
             </div>
             <div className="bg-gray-800 rounded-lg p-6 overflow-x-auto shadow-lg">
               <pre className="text-sm text-gray-100 font-mono leading-relaxed">
-                <code>{currentQ.code}</code>
+                <code>
+                  {currentQ.code}
+                  </code>
               </pre>
             </div>
           </div>

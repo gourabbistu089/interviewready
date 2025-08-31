@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -5,7 +6,7 @@ import Header from "./components/layout/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
+import RegisterPage from "./pages/auth/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage";
 import LearningPage from "./pages/LearningPage";
 import PracticePage from "./pages/PracticePage";
@@ -26,54 +27,97 @@ import AiQuizPage from "./pages/AiQuizPage.jsx";
 
 function App() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [loadingProgress, setLoadingProgress] = React.useState(0);
+  const [currentStep, setCurrentStep] = React.useState('Initializing...');
+
   const fetchTopics = async () => {
-    let allTopics = [];
     try {
+      setCurrentStep('Loading topics...');
       const response = await axios.get(`${API_URL}/topics`);
-      // console.log("response in app", response);
+      
       if (response.data.success) {
-        allTopics = response.data.topics || [];
+        const allTopics = response.data.topics || [];
         if (allTopics.length > 0) {
           dispatch(setTopics(allTopics));
         }
       }
+      return true;
     } catch (error) {
       console.error("Error fetching topics:", error);
+      return false;
     }
   };
+
   const getUser = async () => {
     try {
+      setCurrentStep('Authenticating user...');
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        dispatch(setUser(null));
+        return true; // Not an error, just no user logged in
+      }
+
       const response = await axios.get(`${API_URL}/auth/me`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+      
       let user = null;
       if (response?.data?.success) {
         user = response?.data?.user;
       }
       dispatch(setUser(user));
       console.log("response in app user", response);
+      return true;
     } catch (error) {
       console.error("Error fetching user:", error);
+      // If token is invalid, clear it
+      localStorage.removeItem("token");
+      dispatch(setUser(null));
+      return true; // Don't block app loading for auth errors
     }
   };
   
-   useEffect(() => {
+  useEffect(() => {
     const initializeApp = async () => {
       setLoading(true);
-      await Promise.all([getUser(), fetchTopics()]);
+      setLoadingProgress(0);
+      setCurrentStep('Starting application...');
+
+      // Step 1: Initial setup
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setLoadingProgress(20);
+
+      // Step 2: Get user data
+      await getUser();
+      setLoadingProgress(60);
+
+      // Step 3: Fetch topics
+      await fetchTopics();
+      setLoadingProgress(90);
+
+      // Step 4: Finalize
+      setCurrentStep('Application ready!');
+      setLoadingProgress(100);
+      
+      // Small delay to show completion
+      await new Promise(resolve => setTimeout(resolve, 500));
       setLoading(false);
     };
 
     initializeApp();
   }, []);
 
-  // Show loading screen
+  // Show loading screen with real progress
   if (loading) {
     return (
-     <ApplicationLoader />
+      <ApplicationLoader 
+        progress={loadingProgress} 
+        currentStep={currentStep}
+      />
     );
   }
 
@@ -174,7 +218,6 @@ function App() {
             />
           </Routes>
         </main>
-        {/* <Footer /> */}
         <Toaster
           position="top-right"
           toastOptions={{

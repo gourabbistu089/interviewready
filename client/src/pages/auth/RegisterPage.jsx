@@ -8,8 +8,9 @@ import Card from "../../components/ui/Card";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constants";
 import axios from "axios";
+import toast from "react-hot-toast";
 
-const RegisterPage: React.FC = () => {
+const RegisterPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,14 +19,23 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   // const { register } = useSelector((state: any) => state.auth);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
+      return;
+    }
+    if(password.length<6){
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+    if(!firstName.trim() || !lastName.trim()){
+      toast.error("First name and Last name cannot be empty");
       return;
     }
 
@@ -40,9 +50,15 @@ const RegisterPage: React.FC = () => {
         password,
       });
       console.log(res);
+
+      if (res.data.success) {
+        toast.success( res.data.message||"Registration successful!");
+        navigate("/login");
+      }
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
+      toast.error( (error.response?.data?.message ? ` ${error.response.data.message}` : 'An error occurred during registration. Please try again.'));
     } finally {
       setLoading(false);
     }

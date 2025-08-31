@@ -15,9 +15,11 @@ const userRoutes = require('./routes/users');
 const topicRoutes = require('./routes/topics');
 const questionRoutes = require('./routes/questions');
 const blogRoutes = require('./routes/blogs');
-const mockInterviewRoutes = require('./routes/mockInterview');
 const adminRoutes = require('./routes/admin');
 const progressRoutes = require('./routes/progress');
+const interviewRoutes = require('./routes/interview');
+const aiQuizRoutes = require('./routes/aiQuize');
+const testRoutes = require('./routes/test');
 
 const app = express();
 
@@ -50,13 +52,12 @@ app.use('/api/users', userRoutes);
 app.use('/api/topics', topicRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/blogs', blogRoutes);
-app.use('/api/mock-interviews', mockInterviewRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/progress', progressRoutes);
-app.use('/api/interview', require('./routes/interview'));
-app.use('/api/ai-quiz', require('./routes/aiQuize'));
-// app.use('/api/progress', require('./routes/progress'));
-app.use('/api/test', require('./routes/test'));
+app.use('/api/interview', interviewRoutes);
+app.use('/api/ai-quiz', aiQuizRoutes);
+
+app.use('/api/test', testRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

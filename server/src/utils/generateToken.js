@@ -1,11 +1,15 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = (userId) => {
+const generateToken = (userId,expiresIntime = '1m'
+) => {
+  console.log("userId in generateToken", userId);
+  console.log("expiresIntime in generateToken", expiresIntime);
   return jwt.sign(
     { id: userId },
     process.env.JWT_SECRET || 'fallback-secret-key',
     {
-      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+      // expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+      expiresIn: expiresIntime
     }
   );
 };

@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, getCurrentUser, logout } = require('../controllers/authController');
+const { register, login, getCurrentUser, logout, verifyEmail } = require('../controllers/authController');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
@@ -8,6 +8,9 @@ const router = express.Router();
 // @desc    Register user
 // @access  Public
 router.post('/register', register);
+
+// @route POST /api/auth/verify/:token
+router.get('/verify/:token', verifyEmail);
 
 // @route   POST /api/auth/login
 // @desc    Login user

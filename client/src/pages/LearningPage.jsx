@@ -52,17 +52,20 @@ const ICON_MAP = {
   GitBranch,
   Zap,
 };
+import { PlayCircle, MessageCircle } from 'lucide-react';
 
 import LearningResourceTable from "../components/LearningResourceTable";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { API_URL } from "../constants";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function LearningPage() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [completedSubtopics, setCompletedSubtopics] = useState([]);
+  const navigate = useNavigate();
 
   // Get topics from Redux store
   const topicsData = useSelector((state) => state.topics.topics);
@@ -209,9 +212,23 @@ function LearningPage() {
         <div className="flex-1 p-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <div className="flex items-center space-x-4 mb-2 justify-between">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {selectedTopic?.title || "Select a Topic"}
             </h1>
+
+<button 
+  onClick={() => navigate(`/ai-quiz/${selectedTopic.title}/interview-related/?questions=50`)}
+  className="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-500 hover:from-sky-500 hover:to-sky-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-300 cursor-pointer focus:ring-opacity-50"
+>
+  <div className="flex items-center gap-2">
+    <PlayCircle size={20} />
+    <span className="text-sm font-medium">
+      Start Mock Interview
+    </span>
+  </div>
+</button>
+            </div>
             <p className="text-gray-600 mb-4">
               {selectedTopic?.description ||
                 "Choose a topic from the sidebar to get started"}

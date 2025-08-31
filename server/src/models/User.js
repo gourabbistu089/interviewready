@@ -224,6 +224,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+    isVerified: {
+    type: Boolean,
+    default:false
+  },
   lastLogin: {
     type: Date,
     default: Date.now,

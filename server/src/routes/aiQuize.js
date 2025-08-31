@@ -70,7 +70,9 @@ Generate questions now:`;
     let questions;
     try {
     //   questions = text;
+      console.log("typeof text", typeof text);
        questions = JSON.parse(text);   // <-- parse string into array
+       console.log("typeof questions", typeof questions);
     } catch (parseError) {
       console.error('Failed to parse Gemini response:', text);
       throw new Error('Failed to parse generated questions');
