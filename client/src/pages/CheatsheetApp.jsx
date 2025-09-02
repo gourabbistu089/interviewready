@@ -93,6 +93,23 @@ const CheatsheetApp = () => {
       bgGradient: "from-indigo-50 to-indigo-100",
       hoverBg: "hover:bg-indigo-50",
     },
+    {
+      id: "pandas",
+      name: "Pandas",
+      icon: "🐼",
+      color: "bg-teal-500",
+      accent: "border-teal-500",
+      bgGradient: "from-teal-50 to-teal-100",
+      hoverBg: "hover:bg-teal-50",
+    },
+    { id: "numpy",
+      name: "NumPy",
+      icon: "🔢",
+      color: "bg-cyan-500",
+      accent: "border-cyan-500",
+      bgGradient: "from-cyan-50 to-cyan-100",
+      hoverBg: "hover:bg-cyan-50",
+    },
   ];
 
   // Fetch cheatsheet data
@@ -192,7 +209,7 @@ const CheatsheetApp = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="max-w-screen mx-auto flex gap-0 min-h-[calc(100vh-120px)]">
         {/* Language Sidebar */}
-        <div className="w-80 flex-shrink-0 ">
+        <div className="w-80 flex-shrink-0">
           <div className="bg-white  border border-gray-200 shadow-lg overflow-hidden sticky top-8">
             <div className="p-6 ">
               <h2 className="text-2xl font-bold text-black flex items-center gap-3">

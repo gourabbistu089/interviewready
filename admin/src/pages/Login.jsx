@@ -1,58 +1,4 @@
-// // src/pages/Login.js
-// import React, { useContext, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { AppContext } from '../context/AppContext';
 
-// const Login = () => {
-//   const { setUser } = useContext(AppContext);
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const navigate = useNavigate();
-
-//   const handleLogin = (e) => {
-//     e.preventDefault();
-//     // Dummy login logic
-//     if (email === 'admin@example.com' && password === 'admin') {
-//       setUser({ email }); // Set logged-in user in context
-//       navigate('/');
-//     } else {
-//       alert('Invalid credentials');
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-//       <form
-//         onSubmit={handleLogin}
-//         className="bg-white dark:bg-gray-800 p-6 rounded shadow-md w-80"
-//       >
-//         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//           className="w-full mb-3 px-3 py-2 rounded border dark:bg-gray-700"
-//         />
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//           className="w-full mb-4 px-3 py-2 rounded border dark:bg-gray-700"
-//         />
-//         <button
-//           type="submit"
-//           className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
-//         >
-//           Login
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
 
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -80,7 +26,8 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await login(email, password);
+      const expiredTime = "365d";
+      const response = await login(email, password,expiredTime);
       console.log("Login response:", response);
       if(response.success) {
         setUser(response.user); // Set user in context

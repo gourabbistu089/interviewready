@@ -7,7 +7,7 @@ const cheatsheetSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    enum: ['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'php']
+    // enum: ['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'php']
   },
   title: {
     type: String,

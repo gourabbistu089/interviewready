@@ -37,12 +37,12 @@ export const apiConnector = async (method, url, bodyData, customHeaders = {}, pa
   } catch (error) {
     console.log("error in apiConnector:", error);
     console.error('API Error:', error.response?.data || error.message);
-    throw error.response?.data || error;
+    // throw error.response?.data || error;
   }
 };
 
 // ✅ Auth API
-export const login = (email, password) => apiConnector('POST', '/auth/login', { email, password });
+export const login = (email, password, expiredTime) => apiConnector('POST', '/auth/login', { email, password, expiredTime });
 
 // ✅ Topics CRUD
 export const createTopic = (data) => apiConnector('POST', '/topics', data);
