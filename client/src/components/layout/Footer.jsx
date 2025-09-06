@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Brain, Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import Logo from '../../assets/Logo.png';
 
 const Footer= () => {
   return (
@@ -11,10 +12,7 @@ const Footer= () => {
           {/* Brand Section */}
           <div className="max-w-md">
             <Link to="/" className="inline-flex items-center space-x-3 mb-6">
-              <div className="p-2.5 bg-blue-600 rounded-xl">
-                <Brain className="h-7 w-7 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-gray-900">InterviewReady</span>
+              <img src={Logo} className='h-20' alt="" />
             </Link>
             <p className="text-gray-600 text-lg leading-relaxed">
               Master your interview skills and land your dream job with confidence.
