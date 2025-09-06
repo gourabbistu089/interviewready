@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const User = require('../models/Subtopic');
 const Topic = require('../models/Topic');
 const Question = require('../models/Question');
 const Blog = require('../models/Blog');
@@ -310,4 +311,4 @@ Closures are fundamental to JavaScript and understanding them will make you a be
 };
 
 // Run seed function
-seedData();
+// seedData();

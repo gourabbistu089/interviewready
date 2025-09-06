@@ -57,7 +57,12 @@ const subtopicSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+  magicNotes: {
+  type: String,
+  trim: true,
+  default: ''
+}
 }, { timestamps: true });
 
 module.exports = mongoose.model('Subtopic', subtopicSchema);

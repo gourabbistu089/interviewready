@@ -12,11 +12,13 @@ import {
   Star,
   ExternalLink,
   BookOpen,
+  Sparkles,
   X
 } from 'lucide-react';
 import QuizComponent from '../pages/AiQuizPage';
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import MagicNotes from '../components/MagicNotes'
 
 
 const LearningResourceTable = ({filteredResources,completedSubtopics, setCompletedSubtopics,updateProgress,selectedTopic}) => {
@@ -28,6 +30,8 @@ const LearningResourceTable = ({filteredResources,completedSubtopics, setComplet
   console.log("filteredResources in ResourcesTable", filteredResources);
   const [quizeResource, setQuizeResource] = useState(null);
   const [quizData, setQuizData] = useState(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
   
 useEffect(() => {
   if (completedSubtopics?.length) {
@@ -81,6 +85,7 @@ useEffect(() => {
   };
 
   return (
+   <>
     <div className="max-h-screen overflow-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 p-0 ">
       <div className="max-w-7xl mx-auto">
         {/* Main Table */}
@@ -130,7 +135,7 @@ useEffect(() => {
                         <div className="space-y-2">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <div className="flex items-center space-x-5 mb-2">
+                              <div className="flex items-center space-x-1 mb-2">
                                 <h3 className="font-semibold text-slate-800 text-base">{resource.title}</h3>
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(resource.difficulty)}`}>
                                   {resource.difficulty}
@@ -138,14 +143,14 @@ useEffect(() => {
                               </div>
                             </div>
                             <button
-                              onClick={() => toggleBookmark(resource._id)}
+                              onClick={() => setIsModalOpen(resource?.magicNotes)}
                               className={`ml-3 p-2 rounded-xl transition-all duration-200 shadow-sm ${
-                                isBookmarked
-                                  ? 'bg-amber-100 text-amber-600 shadow-md'
+                                resource?.magicNotes
+                                  ? 'bg-amber-200 text-amber-700 shadow-md'
                                   : 'bg-slate-100 text-slate-400 hover:bg-amber-100 hover:text-amber-600'
                               }`}
                             >
-                              <Bookmark className="h-4 w-4" />
+                              <Sparkles className="h-4 w-4" />
                             </button>
                           </div>
                           
@@ -247,7 +252,12 @@ useEffect(() => {
         </div>
       </div>
     </div>
+    {isModalOpen && (
+      <MagicNotes magicNotes={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+    )}
+   </>
   );
 };
 
 export default LearningResourceTable;
+

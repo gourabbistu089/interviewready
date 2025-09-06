@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/features/authSlice';
+import Logo from '../../assets/Logo.png';
 
 const Header= () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,12 +51,14 @@ const Header= () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg">
+            {/* <div className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg">
               <Brain className="h-6 w-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               InterviewReady
-            </span>
+            </span> */}
+            {/* <img src="../../assets/logo.png" alt=" dfd" /> */}
+            <img src={Logo} className="h-[50px]" alt=" dfd" />
           </Link>
 
           {/* Desktop Navigation */}

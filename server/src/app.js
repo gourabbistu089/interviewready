@@ -9,6 +9,8 @@ const cookieParser = require('cookie-parser');
 
 const errorHandler = require('./middleware/errorHandler');
 
+const Subtopic = require('./models/Subtopic');
+
 // Route imports
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
@@ -32,6 +34,23 @@ app.use(cors({
   origin: ['http://localhost:5174','http://localhost:5173',process.env.FRONTEND_URL],
   credentials: true
 }));
+
+
+// const updateAllSubtopics = async () => {
+//   try {
+//     const result = await Subtopic.updateMany(
+//       { magicNotes: { $exists: false } }, // Only update documents that don't have magicNotes field
+//       { $set: { magicNotes: '' } }
+//     );
+    
+//     console.log(`Updated ${result.modifiedCount} documents`);
+//     return result;
+//   } catch (error) {
+//     console.error('Error updating documents:', error);
+//     throw error;
+//   }
+// };
+// updateAllSubtopics()
 
 
 // Body parsing middleware

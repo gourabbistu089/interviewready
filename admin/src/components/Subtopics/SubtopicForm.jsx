@@ -1,331 +1,7 @@
-// import React, { useState } from 'react';
-// import { useForm } from 'react-hook-form';
-// import { motion } from 'framer-motion';
-// import { Save, Video, FileText, BookOpen } from 'lucide-react';
-// import { useApp } from '../../context/AppContext';
-
-// const SubtopicForm = ({ subtopic, onClose }) => {
-//   const { addSubtopic, updateSubtopic, topics, user } = useApp();
-//   const [activeTab, setActiveTab] = useState('basic');
-
-//   const { register, handleSubmit, formState: { errors } } = useForm({
-//     defaultValues: subtopic || {
-//       title: '',
-//       description: '',
-//       topicId: '',
-//       tags: [],
-//       difficulty: 'easy',
-//       estimatedTime: '30 minutes',
-//       order: 0,
-//       content: {
-//         youtubeLinks: {
-//           url: ''
-//         },
-//         notesLinks: {
-//           url: ''
-//         },
-//         handwrittenPDFs: {
-//           url: ''
-//         }
-//       },
-//       isActive: true
-//     }
-//   });
-
-//   const onSubmit = (data) => {
-//     // Process tags
-//     if (typeof data.tags === 'string') {
-//       data.tags = data.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-//     }
-
-//     // // Add createdBy field for new subtopics
-//     // if (!subtopic && user) {
-//     //   data.createdBy = user._id;
-//     // }
-
-//     console.log("Submitting subtopic data:", data);
-
-//     if (subtopic) {
-//       updateSubtopic(subtopic._id, data);
-//     } else {
-//       addSubtopic(data);
-//     }
-//     onClose();
-//   };
-
-//   const difficulties = [
-//     { value: 'easy', label: 'Easy' },
-//     { value: 'medium', label: 'Medium' },
-//     { value: 'hard', label: 'Hard' }
-//   ];
-
-//   const tabs = [
-//     { id: 'basic', label: 'Basic Info', icon: FileText },
-//     { id: 'content', label: 'Content', icon: Video }
-//   ];
-
-//   return (
-//     <motion.div
-//       initial={{ opacity: 0, y: 20 }}
-//       animate={{ opacity: 1, y: 0 }}
-//       className="space-y-6"
-//     >
-//       {/* Tabs */}
-//       <div className="border-b border-gray-200">
-//         <nav className="-mb-px flex space-x-8">
-//           {tabs.map((tab) => {
-//             const Icon = tab.icon;
-//             return (
-//               <button
-//                 key={tab.id}
-//                 type="button"
-//                 onClick={() => setActiveTab(tab.id)}
-//                 className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
-//                   activeTab === tab.id
-//                     ? 'border-green-500 text-green-600'
-//                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-//                 }`}
-//               >
-//                 <Icon className="w-4 h-4" />
-//                 <span>{tab.label}</span>
-//               </button>
-//             );
-//           })}
-//         </nav>
-//       </div>
-
-//       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-//         {/* Basic Info Tab */}
-//         {activeTab === 'basic' && (
-//           <motion.div
-//             initial={{ opacity: 0, x: 20 }}
-//             animate={{ opacity: 1, x: 0 }}
-//             className="space-y-6"
-//           >
-//             {/* Topic Selection */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Parent Topic *
-//               </label>
-//               <select
-//                 {...register('topicId', { required: 'Topic is required' })}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//               >
-//                 <option value="">Select a topic</option>
-//                 {topics.map(topic => (
-//                   <option key={topic._id} value={topic._id}>{topic.title}</option>
-//                 ))}
-//               </select>
-//               {errors.topicId && (
-//                 <p className="mt-1 text-sm text-red-600">{errors.topicId.message}</p>
-//               )}
-//             </div>
-
-//             {/* Title */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Title *
-//               </label>
-//               <input
-//                 type="text"
-//                 {...register('title', { required: 'Title is required' })}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="Enter subtopic title"
-//               />
-//               {errors.title && (
-//                 <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-//               )}
-//             </div>
-
-//             {/* Description */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Description *
-//               </label>
-//               <textarea
-//                 {...register('description', { required: 'Description is required' })}
-//                 rows={4}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="Enter subtopic description"
-//               />
-//               {errors.description && (
-//                 <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-//               )}
-//             </div>
-
-//             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//               {/* Difficulty */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700 mb-2">
-//                   Difficulty
-//                 </label>
-//                 <select
-//                   {...register('difficulty')}
-//                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 >
-//                   {difficulties.map(diff => (
-//                     <option key={diff.value} value={diff.value}>{diff.label}</option>
-//                   ))}
-//                 </select>
-//               </div>
-
-//               {/* Estimated Time */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700 mb-2">
-//                   Estimated Time
-//                 </label>
-//                 <input
-//                   type="text"
-//                   {...register('estimatedTime')}
-//                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                   placeholder="e.g., 30 minutes, 1 hour"
-//                 />
-//               </div>
-
-//               {/* Order */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700 mb-2">
-//                   Order
-//                 </label>
-//                 <input
-//                   type="number"
-//                   {...register('order', { valueAsNumber: true })}
-//                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Tags */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Tags (comma-separated) *
-//               </label>
-//               <input
-//                 type="text"
-//                 {...register('tags', { required: 'At least one tag is required' })}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="ACID, Concurrency, Deadlock, Locking, Schedules"
-//               />
-//               {errors.tags && (
-//                 <p className="mt-1 text-sm text-red-600">{errors.tags.message}</p>
-//               )}
-//             </div>
-
-//             {/* Active Status */}
-//             <div className="flex items-center">
-//               <input
-//                 type="checkbox"
-//                 {...register('isActive')}
-//                 className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-//               />
-//               <label className="ml-2 block text-sm text-gray-700">
-//                 Active (visible to students)
-//               </label>
-//             </div>
-//           </motion.div>
-//         )}
-
-//         {/* Content Tab */}
-//         {activeTab === 'content' && (
-//           <motion.div
-//             initial={{ opacity: 0, x: 20 }}
-//             animate={{ opacity: 1, x: 0 }}
-//             className="space-y-6"
-//           >
-//             {/* YouTube Link */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 <Video className="inline w-4 h-4 mr-2" />
-//                 YouTube Video URL
-//               </label>
-//               <input
-//                 type="url"
-//                 {...register('content.youtubeLinks.url')}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="https://www.youtube.com/watch?v=..."
-//               />
-//               <p className="mt-1 text-sm text-gray-500">
-//                 Add a YouTube video that explains this subtopic
-//               </p>
-//             </div>
-
-//             {/* Notes Link */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 <FileText className="inline w-4 h-4 mr-2" />
-//                 Notes/Resource URL
-//               </label>
-//               <input
-//                 type="url"
-//                 {...register('content.notesLinks.url')}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="https://www.geeksforgeeks.org/..."
-//               />
-//               <p className="mt-1 text-sm text-gray-500">
-//                 Add a link to online notes or resources
-//               </p>
-//             </div>
-
-//             {/* Handwritten PDFs Link */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 <BookOpen className="inline w-4 h-4 mr-2" />
-//                 Handwritten PDFs URL
-//               </label>
-//               <input
-//                 type="url"
-//                 {...register('content.handwrittenPDFs.url')}
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-//                 placeholder="https://drive.google.com/file/d/..."
-//               />
-//               <p className="mt-1 text-sm text-gray-500">
-//                 Add a link to handwritten notes or PDFs (Google Drive, etc.)
-//               </p>
-//             </div>
-
-//             {/* Content Preview */}
-//             <div className="bg-gray-50 p-4 rounded-lg">
-//               <h4 className="text-sm font-medium text-gray-700 mb-2">Content Preview</h4>
-//               <div className="text-sm text-gray-600 space-y-1">
-//                 <p>📺 YouTube: {register('content.youtubeLinks.url').value || 'Not provided'}</p>
-//                 <p>📝 Notes: {register('content.notesLinks.url').value || 'Not provided'}</p>
-//                 <p>📄 PDFs: {register('content.handwrittenPDFs.url').value || 'Not provided'}</p>
-//               </div>
-//             </div>
-//           </motion.div>
-//         )}
-
-//         {/* Form Actions */}
-//         <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-//           <motion.button
-//             type="button"
-//             whileHover={{ scale: 1.05 }}
-//             whileTap={{ scale: 0.95 }}
-//             onClick={onClose}
-//             className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-//           >
-//             Cancel
-//           </motion.button>
-//           <motion.button
-//             type="submit"
-//             whileHover={{ scale: 1.05 }}
-//             whileTap={{ scale: 0.95 }}
-//             className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-//           >
-//             <Save className="w-4 h-4" />
-//             <span>{subtopic ? 'Update' : 'Create'} Subtopic</span>
-//           </motion.button>
-//         </div>
-//       </form>
-//     </motion.div>
-//   );
-// };
-
-// export default SubtopicForm;
 
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { motion } from "framer-motion";
+import { m, motion } from "framer-motion";
 import {
   Save,
   Video,
@@ -431,6 +107,7 @@ const SubtopicForm = ({ subtopic, onClose }) => {
     defaultValues: subtopic || {
       title: "",
       description: "",
+      magicNotes: "",
       topicId: "",
       tags: [],
       difficulty: "easy",
@@ -567,6 +244,25 @@ const SubtopicForm = ({ subtopic, onClose }) => {
               <textarea
                 {...register("description", {
                   required: "Description is required",
+                })}
+                rows={4}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm resize-none"
+                placeholder="Provide a detailed description of what this subtopic covers"
+              />
+              {errors.description && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+            {/* Magic Notes */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Magic Notes *
+              </label>
+              <textarea
+                {...register("magicNotes", {
+                  required: "Magic Notes is required",
                 })}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm resize-none"
