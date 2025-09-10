@@ -111,7 +111,7 @@ const Header= () => {
                         {user.role === 'admin' ? 'Admin' : 'User'}
                       </span>
                     </div>
-                    {user.role === 'admin' && (
+                    {/* {user.role === 'admin' && (
                       <Link
                         to="/admin"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -120,7 +120,7 @@ const Header= () => {
                         <Settings className="h-4 w-4 mr-3" />
                         Admin Panel
                       </Link>
-                    )}
+                    )} */}
                     <button
                       onClick={() => {
                         dispatch(logout());
