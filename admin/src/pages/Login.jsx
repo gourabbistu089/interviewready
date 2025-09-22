@@ -6,11 +6,11 @@ import { motion } from "framer-motion";
 // import { useAuth } from '../../context/AuthContext';
 import { Brain, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
-import axios from "axios";
-import Card from "../../../client/src/components/ui/Card";
-import Button from "../../../client/src/components/ui/Button";
+
 import { useApp } from "../context/AppContext";
 import { login } from "../api/api";
+import Card from "../components/UI/Card";
+import Button from "../components/UI/Button";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
