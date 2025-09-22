@@ -7,7 +7,7 @@ import TopicCard from '../components/Topics/TopicCard';
 import Modal from '../components/UI/Modal';
 
 const TopicsManagement = () => {
-  const { topics, searchTerm , setSearchTerm} = useApp();
+  const { topics, searchTerm , setSearchTerm, loading} = useApp();
   // console.log("searchTerm:", searchTerm);
   const [showForm, setShowForm] = useState(false);
   const [editingTopic, setEditingTopic] = useState(null);
@@ -54,6 +54,13 @@ const TopicsManagement = () => {
     visible: { y: 0, opacity: 1 }
   };
 
+  if(loading){
+    return <>
+    <div className=' min-h-screen bg-amber-50 flex items-center justify-center'>
+      <h1>Loading ..........</h1>
+    </div>
+    </>
+  }
   return (
     <motion.div
       variants={containerVariants}

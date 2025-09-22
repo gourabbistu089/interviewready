@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { m, motion } from "framer-motion";
+import {motion } from "framer-motion";
 import {
   Save,
   Video,

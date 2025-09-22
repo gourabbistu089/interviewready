@@ -257,6 +257,7 @@ export const AppProvider = ({ children }) => {
     subtopics,
     questions,
     loading,
+    setLoading,
     searchTerm,
     user,
     token,
