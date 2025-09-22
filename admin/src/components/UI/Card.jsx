@@ -1,14 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  hover?: boolean;
-  gradient?: boolean;
-}
 
-const Card: React.FC<CardProps> = ({ 
+const Card = ({ 
   children, 
   className = '', 
   hover = false, 
