@@ -63,3 +63,10 @@ export const getQuestions = () => apiConnector('GET', '/questions/all');
 export const getQuestionById = (id) => apiConnector('GET', `/questions/${id}`);
 export const updateQuestion = (id, data) => apiConnector('PUT', `/questions/${id}`, data);
 export const deleteQuestion = (id) => apiConnector('DELETE', `/questions/${id}`);
+
+
+// ✅ Users CRUD
+export const getAllUsers = (page) => apiConnector('GET', '/admin/users'+page);
+export const getUserById = (id) => apiConnector('GET', `/users/${id}`);
+export const updateUser = (id, data) => apiConnector('PUT', `/users/${id}`, data);
+export const deleteUser = (id) => apiConnector('DELETE', `/admin/users/${id}`);

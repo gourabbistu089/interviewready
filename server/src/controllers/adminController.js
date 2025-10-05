@@ -84,29 +84,16 @@ const getDashboardStats = async (req, res) => {
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search, role, isActive } = req.query;
-    
-    const query = {};
-    
-    if (search) {
-      query.$or = [
-        { username: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } }
-      ];
-    }
-    
-    if (role) query.role = role;
+    const { page = 1, limit = 10, role, isActive } = req.query;
     if (isActive !== undefined) query.isActive = isActive === 'true';
-
-    const users = await User.find(query)
+    console.log("Query", req.query)
+    const users = await User.find({role : {$ne: 'admin'}})
       .select('-password')
-      .sort({ createdAt: -1 })
+      // .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
-    const total = await User.countDocuments(query);
+    const total = await User.countDocuments({role : {$ne: 'admin'}});
 
     res.json({
       success: true,
@@ -182,8 +169,9 @@ const deleteUser = async (req, res) => {
     }
 
     // Delete user's progress and sessions
-    await Progress.deleteMany({ user: id });
-    await InterviewSession.deleteMany({ user: id });
+    
+    // await Progress.deleteMany({ user: id });
+    // await InterviewSession.deleteMany({ user: id });
 
     res.json({
       success: true,
