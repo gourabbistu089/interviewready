@@ -18,16 +18,15 @@ const getTopics = async (req, res) => {
     }
 
     const topics = await Topic.find(query)
-      .select("title description icon color practiceTopics difficulty estimatedTime category order isActive")
+      .select("title description icon color practiceTopics difficulty estimatedTime category order isActive updatedAt createdAt")
       .lean()
       .populate({
         path: "subTopics",
         populate: {
           path: "questions",
         },
-      })// populate subtopics and their questions
-      // .populate('createdBy', 'username firstName lastName')
-      // .sort({ order: 1, createdAt: -1 })
+      })
+      .sort({createdAt: -1})
       .limit(limit * 1)
       .skip((page - 1) * limit);
 

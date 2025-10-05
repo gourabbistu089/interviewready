@@ -12,6 +12,7 @@
     "concurrently": "^8.2.0"
   },
   "dependencies": {
-    "framer-motion": "^12.23.16"
+    "framer-motion": "^12.23.16",
+    "recharts": "^3.2.1"
   }
 }

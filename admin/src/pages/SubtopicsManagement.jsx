@@ -5,9 +5,10 @@ import { useApp } from '../context/AppContext';
 import SubtopicForm from '../components/Subtopics/SubtopicForm';
 import SubtopicCard from '../components/Subtopics/SubtopicCard';
 import Modal from '../components/UI/Modal';
+import RippleSpinner from '../components/UI/LoadingSpinner';
 
 const SubtopicsManagement = () => {
-  const { subtopics, topics, searchTerm , setSearchTerm} = useApp();
+  const { subtopics, topics, searchTerm , setSearchTerm,loading} = useApp();
   const [showForm, setShowForm] = useState(false);
   const [editingSubtopic, setEditingSubtopic] = useState(null);
   const [filterTopic, setFilterTopic] = useState('all');
@@ -49,7 +50,9 @@ const SubtopicsManagement = () => {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 }
   };
-
+ if(loading){
+    return <RippleSpinner/>
+  }
   return (
     <motion.div
       variants={containerVariants}

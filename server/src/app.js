@@ -7,7 +7,6 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 
-const errorHandler = require('./middleware/errorHandler');
 
 const Subtopic = require('./models/Subtopic');
 
@@ -90,9 +89,6 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
-
-// Error handling middleware
-app.use(errorHandler);
 
 // Handle 404 routes
 app.use('*', (req, res) => {

@@ -62,7 +62,7 @@ export const AppProvider = ({ children }) => {
   const fetchTopics = async () => {
     try {
       const data = await getTopics();
-      console.log("Fetched topics:", data);
+      console.log("Fetched topics in ddd:", data);
       setTopics(data?.topics);
     } catch (err) {
       console.error('Error fetching topics:', err);
@@ -74,7 +74,7 @@ export const AppProvider = ({ children }) => {
   const fetchSubtopics = async () => {
     try {
       const data = await getSubtopics();
-      console.log("Fetched subtopics:", data);
+      // console.log("Fetched subtopics:", data);
       setSubtopics(data?.subtopics || []);
     } catch (err) {
       console.error('Error fetching subtopics:', err);
@@ -86,7 +86,7 @@ export const AppProvider = ({ children }) => {
   const fetchQuestions = async () => {
     try {
       const data = await getQuestions();
-      console.log("Fetched questions:", data);
+      // console.log("Fetched questions:", data);
       setQuestions(data.questions || []);
     } catch (err) {
       console.error('Error fetching questions:', err);

@@ -5,9 +5,10 @@ import { useApp } from '../context/AppContext';
 import QuestionForm from '../components/Questions/QuestionForm';
 import QuestionCard from '../components/Questions/QuestionCard';
 import Modal from '../components/UI/Modal';
+import RippleSpinner from '../components/UI/LoadingSpinner';
 
 const QuestionsManagement = () => {
-  const { questions, topics, searchTerm , setSearchTerm, subtopics} = useApp();
+  const { questions, topics, searchTerm , setSearchTerm, subtopics,loading} = useApp();
   const [showForm, setShowForm] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [filterType, setFilterType] = useState('all');
@@ -70,6 +71,9 @@ const QuestionsManagement = () => {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 }
   };
+   if(loading){
+    return <RippleSpinner/>
+  }
 
   return (
     <motion.div

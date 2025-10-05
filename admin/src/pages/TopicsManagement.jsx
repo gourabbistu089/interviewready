@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext';
 import TopicForm from '../components/Topics/TopicForm';
 import TopicCard from '../components/Topics/TopicCard';
 import Modal from '../components/UI/Modal';
+import RippleSpinner from '../components/UI/LoadingSpinner';
 
 const TopicsManagement = () => {
   const { topics, searchTerm , setSearchTerm, loading} = useApp();
@@ -55,11 +56,7 @@ const TopicsManagement = () => {
   };
 
   if(loading){
-    return <>
-    <div className=' min-h-screen bg-amber-50 flex items-center justify-center'>
-      <h1>Loading ..........</h1>
-    </div>
-    </>
+    return <RippleSpinner/>
   }
   return (
     <motion.div

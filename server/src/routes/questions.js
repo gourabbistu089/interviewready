@@ -11,7 +11,6 @@ const {
   getSavedQuestions,
   getAllQuestions
 } = require('../controllers/questionController');
-const { validate, questionValidationRules } = require('../middleware/validation');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 
