@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { deleteUser, getAllUsers } from "../api/api";
 
-const UserSettings = () => {
+const UsersManagement = () => {
   const [usersData, setUsersData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -503,4 +503,4 @@ const UserSettings = () => {
   );
 };
 
-export default UserSettings;
+export default UsersManagement;

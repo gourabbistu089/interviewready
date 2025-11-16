@@ -26,7 +26,7 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      console.log("expiredTime", expiredTime);
+      // console.log("expiredTime", expiredTime);
       const res  = await axios.post(`${API_URL}/auth/login`, { email, password, expiredTime});
       console.log('Login response:', res.data);
       // return;

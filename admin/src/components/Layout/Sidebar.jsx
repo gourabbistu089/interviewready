@@ -8,6 +8,8 @@ import {
   HelpCircle, 
   Settings, 
   X,
+  User,
+  UserCog ,
   GraduationCap
 } from 'lucide-react';
 
@@ -19,7 +21,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: 'Topics', href: '/topics', icon: BookOpen },
     { name: 'Subtopics', href: '/subtopics', icon: FileText },
     { name: 'Questions', href: '/questions', icon: HelpCircle },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Users', href: '/users', icon: UserCog  },
   ];
 
   const sidebarVariants = {
@@ -71,6 +73,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             const isActive = location.pathname === item.href;
             
             return (
+              <>
               <NavLink
                 key={item.name}
                 to={item.href}
@@ -84,6 +87,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <Icon className={`mr-3 w-5 h-5 ${isActive ? 'text-blue-700' : 'text-gray-400'}`} />
                 {item.name}
               </NavLink>
+
+              </>
             );
           })}
         </nav>

@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import TopicsManagement from "./pages/TopicsManagement";
 import SubtopicsManagement from "./pages/SubtopicsManagement";
 import QuestionsManagement from "./pages/QuestionsManagement";
-import Settings from "./pages/Settings";
+import UsersManagement from "./pages/UsersManagement";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AppProvider } from "./context/AppContext";
@@ -59,11 +59,11 @@ function App() {
               }
             />
             <Route
-              path="/settings"
+              path="/users"
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Settings />
+                    < UsersManagement />
                   </Layout>
                 </ProtectedRoute>
               }

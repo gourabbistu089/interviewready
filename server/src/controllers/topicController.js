@@ -26,7 +26,7 @@ const getTopics = async (req, res) => {
           path: "questions",
         },
       })
-      .sort({createdAt: -1})
+      // .sort({createdAt: -1})
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
