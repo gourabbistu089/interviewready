@@ -21,6 +21,7 @@ const progressRoutes = require('./routes/progress');
 const interviewRoutes = require('./routes/interview');
 const aiQuizRoutes = require('./routes/aiQuize');
 const cheatsheetRoutes = require('./routes/cheetsheet');
+const chatbotRoutes = require('./routes/chatbot');
 const testRoutes = require('./routes/test');
 
 require('dotenv').config(); 
@@ -78,6 +79,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/interview', interviewRoutes);
 app.use('/api/cheatsheets', cheatsheetRoutes);
 app.use('/api/ai-quiz', aiQuizRoutes);
+app.use("/api/chatbot", chatbotRoutes);        // General AI Assistant
 
 app.use('/api/test', testRoutes);
 

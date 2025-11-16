@@ -25,12 +25,14 @@ import Blog from "./pages/Blog.jsx";
 import ApplicationLoader from "./components/ui/ApplicationLoader.jsx";
 import AiQuizPage from "./pages/AiQuizPage.jsx";
 import CheatsheetApp from "./pages/CheatsheetApp.jsx";
+import InterviewChatbot from "./components/InterviewChatbot.jsx";
 
 function App() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [loadingProgress, setLoadingProgress] = React.useState(0);
   const [currentStep, setCurrentStep] = React.useState('Initializing...');
+  const[intialLoad,setInitialLoad] = React.useState(false);
 
   const fetchTopics = async () => {
     try {
@@ -81,7 +83,7 @@ function App() {
       return true; // Don't block app loading for auth errors
     }
   };
-  
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const initializeApp = async () => {
       setLoading(true);
@@ -105,12 +107,12 @@ function App() {
       setLoadingProgress(100);
       
       // Small delay to show completion
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // await new Promise(resolve => setTimeout(resolve, 500));
       setLoading(false);
     };
 
-    initializeApp();
-  }, []);
+    token && initializeApp();
+  }, [intialLoad]);
 
   // Show loading screen with real progress
   if (loading) {
@@ -126,6 +128,7 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <Header />
+        <InterviewChatbot/>
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -133,7 +136,7 @@ function App() {
               path="/login"
               element={
                 <OpenRoute>
-                  <LoginPage />
+                  <LoginPage intialLoad={intialLoad} setInitialLoad={setInitialLoad} />
                 </OpenRoute>
               }
             />

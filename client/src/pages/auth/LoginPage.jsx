@@ -11,7 +11,7 @@ import axios from 'axios';
 import { API_URL } from '../../constants';
 import toast from 'react-hot-toast';
 
-const LoginPage = () => {
+const LoginPage = ({initialLoad, setInitialLoad}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [expiredTime, setExpiredTime] = useState('1m');
@@ -32,6 +32,7 @@ const LoginPage = () => {
       // return;
       if (res.data.success) {
         toast.success('Login successful!');
+        setInitialLoad(true);
         navigate('/dashboard');
         dispatch(login(res.data));
       } else {
