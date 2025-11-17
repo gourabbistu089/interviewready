@@ -11,7 +11,7 @@ export default function InterviewChatbot() {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_BACKEND_URL;
+  const API_URL = import.meta.env.VITE_BACKEND_URL + '/chatbot/chat';
   const AUTH_TOKEN = localStorage.getItem('token');
 
   const scrollToBottom = () => {
