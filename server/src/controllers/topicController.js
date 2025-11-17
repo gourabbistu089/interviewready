@@ -27,8 +27,8 @@ const getTopics = async (req, res) => {
         },
       })
       // .sort({createdAt: -1})
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
+      // .limit(limit * 1)
+      // .skip((page - 1) * limit);
 
     const total = await Topic.countDocuments(query);
 
