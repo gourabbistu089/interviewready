@@ -32,7 +32,7 @@ router.post('/start', auth, async (req, res) => {
 
     // Generate first question
     const firstQuestion = await AIInterviewService.generateQuestion(role, 1);
-    console.log("firstQuestion", firstQuestion);
+    // console.log("firstQuestion", firstQuestion);
 
     session.questions.push({
       question: firstQuestion,
