@@ -75,11 +75,11 @@ const register = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     const token = req.params.token;
-    console.log("token in verifyEmail", token);
+    // console.log("token in verifyEmail", token);
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded in verifyEmail", decoded);
+    // console.log("decoded in verifyEmail", decoded);
         const user = await User.findById(decoded.id);
-        console.log("user in auth middleware", user);
+        // console.log("user in auth middleware", user);
     console.log("decoded in verifyEmail 🚀🚀🚀🚀", decoded);
     // const user = await User.findById({ _id: decoded.id });
     if (!user) return res.status(400).send("Invalid link || User not found");

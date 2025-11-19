@@ -26,6 +26,7 @@ import ApplicationLoader from "./components/ui/ApplicationLoader.jsx";
 import AiQuizPage from "./pages/AiQuizPage.jsx";
 import CheatsheetApp from "./pages/CheatsheetApp.jsx";
 import InterviewChatbot from "./components/InterviewChatbot.jsx";
+import NotFoundPage from "./pages/NotFound404.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -132,6 +133,7 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="*" element={<NotFoundPage />} />
             <Route
               path="/login"
               element={

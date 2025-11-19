@@ -238,14 +238,14 @@ const RegisterPage = () => {
                 >
                   I agree to the{" "}
                   <Link
-                    to="/terms"
+                    to="/terms-construction"
                     className="text-blue-600 hover:text-blue-500"
                   >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
                   <Link
-                    to="/privacy"
+                    to="/privacy-construction"
                     className="text-blue-600 hover:text-blue-500"
                   >
                     Privacy Policy

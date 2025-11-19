@@ -26,7 +26,7 @@ export default function InterviewChatbot() {
     if (showToast) {
       const timer = setTimeout(() => {
         setShowToast(false);
-      }, 4000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [showToast]);

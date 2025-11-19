@@ -6,7 +6,7 @@ const generateToken = (userId,expiresIntime = '1m'
   console.log("expiresIntime in generateToken", expiresIntime);
   return jwt.sign(
     { id: userId },
-    process.env.JWT_SECRET || 'fallback-secret-key',
+    process.env.JWT_SECRET,
     {
       // expiresIn: process.env.JWT_EXPIRES_IN || '7d'
       expiresIn: expiresIntime
