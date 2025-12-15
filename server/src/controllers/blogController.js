@@ -2,6 +2,8 @@ const Blog = require('../models/Blog');
 const { uploadOnCloudinary , deleteFromCloudinary} = require('../config/cloudinary');
 const User = require('../models/User');
 
+// normal comment
+
 // Get all blogs
 const getBlogs = async (req, res) => {
   try {
