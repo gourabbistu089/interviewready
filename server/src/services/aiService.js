@@ -52,7 +52,8 @@ Return only the question text.
       Return only the question, no additional text.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-001",
+        // model: "gemini-2.0-flash-001",
+           model: "gemini-2.5-flash",  // Changed to free tier model
         contents: prompt,
         config: {
           maxOutputTokens: 200,
@@ -96,7 +97,8 @@ Return only the question text.
       }`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-001",
+          // model: "gemini-2.5-flash",  // Changed to free tier model
+             model: "gemini-2.5-flash",  // Changed to free tier model
         contents: prompt,
         config: {
           maxOutputTokens: 300,
@@ -160,7 +162,8 @@ Please provide the feedback in plain text only (no markdown, no bullets). Struct
 Make the tone supportive, constructive, and easy to read. Avoid using complex language or formatting. Keep everything in plain, readable paragraphs.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-001",
+        // model: "gemini-2.0-flash-001",
+           model: "gemini-2.5-flash",  // Changed to free tier model
         contents: prompt,
         config: {
           maxOutputTokens: 300,
@@ -192,7 +195,8 @@ Make the tone supportive, constructive, and easy to read. Avoid using complex la
       Return only the question, no additional text.`;
 
       const response = await ai.models.generateContentStream({
-        model: "gemini-2.0-flash-001",
+        // model: "gemini-2.0-flash-001",
+           model: "gemini-2.5-flash",  // Changed to free tier model
         contents: prompt,
         config: {
           maxOutputTokens: 200,
@@ -238,7 +242,8 @@ Make the tone supportive, constructive, and easy to read. Avoid using complex la
   getModelInfo() {
     return {
       provider: "Google",
-      model: "gemini-2.0-flash-001",
+      // model: "gemini-2.0-flash-001",
+         model: "gemini-2.5-flash",  // Changed to free tier model
       sdk: "@google/genai",
       capabilities: [
         "text-generation",

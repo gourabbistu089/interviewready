@@ -42,6 +42,7 @@ const getBlogs = async (req, res) => {
       }
     });
   } catch (error) {
+     console.log("Error in Updating Blog : ", error)
     res.status(500).json({
       success: false,
       message: 'Server error getting blogs',
@@ -61,8 +62,6 @@ const getBlogById = async (req, res) => {
     
     const blog = await Blog.findOne(query)
       .populate('author', 'username firstName lastName profilePicture')
-      .populate('comments.user', 'username firstName lastName profilePicture');
-
     if (!blog) {
       return res.status(404).json({
         success: false,
@@ -79,6 +78,7 @@ const getBlogById = async (req, res) => {
       blog
     });
   } catch (error) {
+     console.log("Error in Getting Blog : ", error)
     res.status(500).json({
       success: false,
       message: 'Server error getting blog',
@@ -105,16 +105,20 @@ const createBlog = async (req, res) => {
     const user = await User.findById(req.user.id);
 
     
-    const imgLocalPath = req.file?.path;
-    if(!imgLocalPath) {
-      return res.status(400).json({
-        success: false,
-        message: 'Featured image is required'
-      });
-    }
-    const imgURL = await uploadOnCloudinary(imgLocalPath);
-    const featuredImage = imgURL.secure_url;
-    blogData.featuredImage = featuredImage;
+    // const imgLocalPath = req.file?.path;
+    // if(!imgLocalPath) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Featured image is required'
+    //   });
+    // }
+    // const imgURL = await uploadOnCloudinary(imgLocalPath);
+    // const featuredImage = imgURL.secure_url;
+    // blogData.featuredImage = featuredImage;
+    const imgUrl = await uploadOnCloudinary(req.file.buffer);
+      const featuredImage = imgUrl.secure_url;
+      blogData.featuredImage = featuredImage
+
 
     const blog = await Blog.create(blogData);
 
@@ -128,6 +132,7 @@ const createBlog = async (req, res) => {
       blog
     });
   } catch (error) {
+    console.log("Error in creating Blog : ", error)
     res.status(500).json({
       success: false,
       message: 'Server error creating blog',
@@ -139,6 +144,8 @@ const createBlog = async (req, res) => {
 // Update blog
 const updateBlog = async (req, res) => {
   try {
+    const { title, content, excerpt, category, tags, status, relatedArticles } = req.body;
+    
     const blog = await Blog.findById(req.params.id);
 
     if (!blog) {
@@ -148,7 +155,7 @@ const updateBlog = async (req, res) => {
       });
     }
 
-    // Check if user is author or admin
+    // Check authorization
     if (blog.author.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
@@ -156,32 +163,41 @@ const updateBlog = async (req, res) => {
       });
     }
     
-      let updates = {
-        title ,
-        content,
-        excerpt,
-        category,
-        tags: tags
-          ? JSON.parse(tags).map((tag) => tag.toLowerCase().trim())
-          : [],
-        status,
-        relatedArticles: relatedArticles
-          ? JSON.parse(relatedArticles).map((article) => article._id)
-          : [],
-      };
-  // hadle image
-    if(req.file){
-      const imgLocalPath = req.file?.path;
-      if (!imgLocalPath) {
-        return res.status(400).json({
+    // Build updates object with only provided fields
+    let updates = {};
+    
+    if (title) updates.title = title;
+    if (content) updates.content = content;
+    if (excerpt) updates.excerpt = excerpt;
+    if (category) updates.category = category;
+    if (status) updates.status = status;
+    
+    if (tags) {
+      const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags;
+      updates.tags = parsedTags.map(tag => tag.toLowerCase().trim());
+    }
+    
+    if (relatedArticles) {
+      const parsed = typeof relatedArticles === 'string' 
+        ? JSON.parse(relatedArticles) 
+        : relatedArticles;
+      updates.relatedArticles = parsed.map(article => article._id);
+    }
+
+    // Handle image upload
+    if (req.file) {
+      const imgUrl = await uploadOnCloudinary(req.file.buffer);
+      
+      if (!imgUrl || !imgUrl.secure_url) {
+        return res.status(500).json({
           success: false,
-          message: "Image is required",
+          message: 'Failed to upload image'
         });
       }
-      const imgUrl = await uploadOnCloudinary(imgLocalPath);
-      const featuredImage = imgUrl.secure_url;
-      updates.featuredImage = featuredImage
+      
+      updates.featuredImage = imgUrl.secure_url;
     }
+
     const updatedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
       updates,
@@ -193,7 +209,9 @@ const updateBlog = async (req, res) => {
       message: 'Blog updated successfully',
       blog: updatedBlog
     });
+    
   } catch (error) {
+    console.log("Error in Updating Blog:", error);
     res.status(500).json({
       success: false,
       message: 'Server error updating blog',
@@ -223,6 +241,7 @@ const deleteBlog = async (req, res) => {
     }
 
     await Blog.findByIdAndDelete(req.params.id);
+    await deleteFromCloudinary(blog.featuredImage);
 
     res.json({
       success: true,

@@ -100,4 +100,24 @@ app.use('*', (req, res) => {
   });
 });
 
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+  console.error('💥 Server Error:', err);
+
+  // Handle specific Gemini quota error
+  if (err?.status === 429 || err?.code === 429) {
+    return res.status(429).json({
+      success: false,
+      message: "AI quota exceeded. Please wait or enable billing.",
+      details: err.message || null
+    });
+  }
+
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Something went wrong on the server.",
+  });
+});
+
+
 module.exports = app;

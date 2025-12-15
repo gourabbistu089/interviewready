@@ -1,4 +1,4 @@
-// // index.js
+a// // index.js
 // const { GoogleGenAI } = require('@google/genai');
 
 // const apiKey = "AIzaSyBvjsCy0DSrbGpkW9rAc53tN0GC5ttzg0E";

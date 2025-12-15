@@ -27,6 +27,7 @@ import AiQuizPage from "./pages/AiQuizPage.jsx";
 import CheatsheetApp from "./pages/CheatsheetApp.jsx";
 import InterviewChatbot from "./components/InterviewChatbot.jsx";
 import NotFoundPage from "./pages/NotFound404.jsx";
+import UpdateBlog from "./pages/UpdateBlog.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -133,7 +134,6 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="*" element={<NotFoundPage />} />
             <Route
               path="/login"
               element={
@@ -215,6 +215,15 @@ function App() {
               }
             />
             <Route
+              path="/update-blog/:id"
+              // path="/dd"
+              element={
+                <ProtectedRoute>
+                  <UpdateBlog />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/ai-quiz/:topic/:subtopic"
               element={
                 <ProtectedRoute>
@@ -230,6 +239,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFoundPage />} />
+
           </Routes>
         </main>
         <Toaster

@@ -39,7 +39,7 @@ router.post("/chat", auth, async (req, res) => {
     const prompt = generalChatPrompt({ message });
     console.log("prompt",prompt)
     const result = await genAI.models.generateContent({
-      model: "gemini-2.0-flash-001",
+        model: "gemini-2.5-flash",  // Changed to free tier model
       contents: prompt
     });
     console.log("Result",result)
