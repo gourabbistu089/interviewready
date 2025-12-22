@@ -4,22 +4,6 @@ const cloudinary = require('../config/cloudinary');
 const multer = require('multer');
 const Question = require('../models/Question');
 
-// Configure multer for image uploads
-const storage = multer.memoryStorage();
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed'), false);
-    }
-  }
-}).single('profilePicture');
-
 // Get user profile
 const getUserProfile = async (req, res) => {
   try {
@@ -131,13 +115,14 @@ const updateProfile = async (req, res) => {
 // Upload profile picture
 const uploadProfilePicture = async (req, res) => {
   try {
-    upload(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message
-        });
-      }
+          const user = await User.findById(req.params.id || req.user.id).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
 
       if (!req.file) {
         return res.status(400).json({
@@ -146,54 +131,15 @@ const uploadProfilePicture = async (req, res) => {
         });
       }
 
-      try {
-        // Upload to Cloudinary
-        const result = await new Promise((resolve, reject) => {
-          cloudinary.uploader.upload_stream(
-            {
-              folder: 'interview-ready/profiles',
-              transformation: [
-                { width: 200, height: 200, crop: 'fill' },
-                { quality: 'auto' }
-              ]
-            },
-            (error, result) => {
-              if (error) reject(error);
-              else resolve(result);
-            }
-          ).end(req.file.buffer);
-        });
+      const imgUrl = await cloudinary.uploadOnCloudinary(req.file.buffer);
+      user.profilePicture=imgUrl.secure_url
+      await user.save()
+      res.status(200).json({
+        success:true,
+        profilePicture : imgUrl.secure_url,
+        message:"Profile picture updated "
+      })
 
-        // Update user profile picture
-        const user = await User.findByIdAndUpdate(
-          req.user.id,
-          { profilePicture: result.secure_url },
-          { new: true }
-        ).select('-password');
-
-        res.json({
-          success: true,
-          message: 'Profile picture uploaded successfully',
-          profilePicture: result.secure_url,
-          user: {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            fullName: user.fullName,
-            profilePicture: user.profilePicture,
-            preferences: user.preferences
-          }
-        });
-      } catch (cloudinaryError) {
-        res.status(500).json({
-          success: false,
-          message: 'Error uploading image',
-          error: cloudinaryError.message
-        });
-      }
-    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -292,6 +238,7 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+
 const toggleRevisionQuestion = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -340,6 +287,8 @@ const toggleRevisionQuestion = async (req, res) => {
     });
   }
 };
+
+
 
 module.exports = {
   getUserProfile,

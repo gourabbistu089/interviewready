@@ -12,6 +12,7 @@ const {
 } = require('../controllers/blogController');
 const auth = require('../middleware/auth');
 const { upload } = require('../middleware/multer');
+const { uploadOnCloudinary } = require('../config/cloudinary');
 
 const router = express.Router();
 
@@ -64,5 +65,17 @@ router.get('/:id/comments', auth, getComments);
 // @route   GET /api/blogs/:id/comments
 // @desc    Get all comments with populate author in particular blog
 // @access  Private
+
+// editor image upload
+router.put(
+  "/editor/image",
+  upload.single("image"),
+  async (req, res) => {
+    // const result = await cloudinary.uploader.upload(req.file.path);
+     const result = await uploadOnCloudinary(req.file.buffer);
+    res.json({ url: result.secure_url });
+  }
+);
+
 
 module.exports = router;

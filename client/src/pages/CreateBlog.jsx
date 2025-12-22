@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setBlog } from '../redux/features/blogSlice';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../constants';
+import BlogEditor from '../components/BlogEditor';
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -291,12 +292,14 @@ const CreateBlog = () => {
                 Content *
               </label>
               <div className="border border-gray-200 rounded-xl overflow-hidden bg-white/50 backdrop-blur-sm">
-                <Editor
+                {/* <Editor
                   value={formData.content}
                   onTextChange={(e) => handleInputChange('content', e.htmlValue)}
                   style={{ height: '450px' }}
                   className="bg-white/50"
-                />
+                /> */}
+<BlogEditor formData={formData} setFormData={setFormData}/>
+                
               </div>
             </div>
 

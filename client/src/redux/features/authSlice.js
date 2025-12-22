@@ -1,28 +1,28 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('token') || null,
-  isLoggedIn: !!localStorage.getItem('token'),
+  token: localStorage.getItem("token") || null,
+  isLoggedIn: !!localStorage.getItem("token"),
   loading: false,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     login(state, action) {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isLoggedIn = true;
-      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem("token", action.payload.token);
       // localStorage.setItem('user', JSON.stringify(action.payload.user));
     },
     logout(state) {
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     },
     setLoading(state, action) {
       state.loading = action.payload;
@@ -30,8 +30,13 @@ const authSlice = createSlice({
     setUser(state, action) {
       state.user = action.payload;
     },
-  }
+    updateProfilePicture(state, action) {
+      console.log("payload in : ",action.payload)
+      state.user.profilePicture = action.payload;
+    },
+  },
 });
 
-export const { login, logout,setLoading , setUser} = authSlice.actions;
+export const { login, logout, setLoading, setUser, updateProfilePicture } =
+  authSlice.actions;
 export default authSlice.reducer;

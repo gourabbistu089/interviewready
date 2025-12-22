@@ -6,7 +6,6 @@ import { useApp } from '../context/AppContext';
 import { formatDate, topicStats } from '../utils/constant';
 
 const Dashboard = () => {
-  const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
   // const [isLoading, setIsLoading] = useState(true);
   const { topics, subtopics, questions, loading } = useApp();
   console.log("Topics:", topics);

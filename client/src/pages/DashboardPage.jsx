@@ -25,12 +25,16 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useRef, useState } from "react";
+import { API_URL } from "../constants";
+import axios from "axios";
+import { updateProfilePicture } from "../redux/features/authSlice";
+import toast from "react-hot-toast"
 const DashboardPage = () => {
   // const user = dummyUser;
   const { user } = useSelector((state) => state.auth);
-
+  const dispatch = useDispatch();
   const stats = [
     {
       title: "Questions Solved",
@@ -59,7 +63,7 @@ const DashboardPage = () => {
       gradient: "from-blue-500 to-indigo-500",
       description: "Practice sessions completed",
     },
-    
+
     {
       title: "Blogs Written",
       value: user?.stats?.blogsWritten,
@@ -80,7 +84,7 @@ const DashboardPage = () => {
       difficulty: user?.activity?.latestQuestion?.difficulty,
       icon: Code,
     },
-       {
+    {
       type: "module",
       title: user?.activity?.latestSubtopic?.title,
       topic: user?.activity?.latestSubtopic?.tags[0],
@@ -92,7 +96,9 @@ const DashboardPage = () => {
     },
     {
       type: "mock",
-      title: user?.activity?.latestInterviewSession?.title &&  "Mock Interview: " + user?.activity?.latestInterviewSession?.role,
+      title:
+        user?.activity?.latestInterviewSession?.title &&
+        "Mock Interview: " + user?.activity?.latestInterviewSession?.role,
       topic: user?.activity?.latestInterviewSession?.role,
       time: user?.activity?.latestInterviewSession?.endTime,
       status: "completed",
@@ -179,7 +185,42 @@ const DashboardPage = () => {
     }
   };
 
-  console.log("Recent Activity:", recentActivity);
+  const fileInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePicture", file);
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${API_URL}/users/upload-profile-picture`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(res);
+      // update user state instantly
+      dispatch(updateProfilePicture(res.data.profilePicture));
+    } catch (err) {
+      console.error(err);
+      toast.success("Image upload failed");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -202,9 +243,47 @@ const DashboardPage = () => {
             <div className="hidden md:block">
               <div className="bg-white/70 backdrop-blur-sm border border-white/20 rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center space-x-4">
-                  <div className="w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
-                    <User className="h-7 w-7 text-white" />
+                  <div className="relative w-14 h-14 group">
+                    {/* Profile Image */}
+                    {/* Profile Image */}
+                    <img
+                      src={user?.profilePicture}
+                      alt="profile"
+                      className="w-14 h-14 rounded-full object-cover shadow-lg"
+                    />
+
+                    {/* Hover / Loading Overlay */}
+                    <button
+                      onClick={handleButtonClick}
+                      disabled={loading}
+                      className={`absolute inset-0 rounded-full 
+      flex items-center justify-center
+      transition
+      ${
+        loading
+          ? "bg-black/50 opacity-100 cursor-not-allowed"
+          : "bg-black/50 opacity-0 group-hover:opacity-100"
+      }
+    `}
+                    >
+                      {loading ? (
+                        /* Spinner */
+                        <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        "📷"
+                      )}
+                    </button>
+
+                    {/* Hidden Input */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
                   </div>
+
                   <div>
                     <p className="text-sm text-gray-600 font-medium">
                       Member since
@@ -326,53 +405,56 @@ const DashboardPage = () => {
                   View all →
                 </Link> */}
               </div>
-              <div className="space-y-3 max-h-96 overflow-y-auto overflow-x-hidden 
+              <div
+                className="space-y-3 max-h-96 overflow-y-auto overflow-x-hidden 
                [&::-webkit-scrollbar]:w-2 
                 [&::-webkit-scrollbar-thumb]:bg-[#dcdcdc6d] 
                 [&::-webkit-scrollbar-thumb]:rounded-full 
                 [&::-webkit-scrollbar-track]:bg-gray-200 
-              ">
+              "
+              >
                 {recentActivity.map((activity, index) => {
                   const Icon = activity.icon;
                   return (
-                    (activity.title || activity.topic) &&
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-102"
-                    >
-                      <div className="flex items-center flex-1">
-                        <Icon className="h-5 w-5 text-gray-500 mr-4" />
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 mb-1">
-                            {activity.title}
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            {activity.topic} 
-                          </p>
-                          <div className="flex items-center space-x-2 mt-2">
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full font-medium ${getDifficultyColor(
-                                activity.difficulty
-                              )}`}
-                            >
-                              {activity.difficulty}
-                            </span>
-                            {activity.score && (
-                              <span className="text-xs text-gray-500 font-medium">
-                                Score: {activity.score}%
+                    (activity.title || activity.topic) && (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-102"
+                      >
+                        <div className="flex items-center flex-1">
+                          <Icon className="h-5 w-5 text-gray-500 mr-4" />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900 mb-1">
+                              {activity.title}
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              {activity.topic}
+                            </p>
+                            <div className="flex items-center space-x-2 mt-2">
+                              <span
+                                className={`text-xs px-2 py-1 rounded-full font-medium ${getDifficultyColor(
+                                  activity.difficulty
+                                )}`}
+                              >
+                                {activity.difficulty}
                               </span>
-                            )}
+                              {activity.score && (
+                                <span className="text-xs text-gray-500 font-medium">
+                                  Score: {activity.score}%
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full font-medium border ${getStatusColor(
+                            activity.status
+                          )}`}
+                        >
+                          {activity.status}
+                        </span>
                       </div>
-                      <span
-                        className={`text-xs px-3 py-1 rounded-full font-medium border ${getStatusColor(
-                          activity.status
-                        )}`}
-                      >
-                        {activity.status}
-                      </span>
-                    </div>
+                    )
                   );
                 })}
               </div>

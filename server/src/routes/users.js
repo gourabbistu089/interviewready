@@ -9,6 +9,7 @@ const {
   toggleRevisionQuestion
 } = require('../controllers/userController');
 const auth = require('../middleware/auth');
+const { upload } = require('../middleware/multer');
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.put('/profile', auth, updateProfile);
 // @route   POST /api/users/upload-profile-picture
 // @desc    Upload profile picture
 // @access  Private
-router.post('/upload-profile-picture', auth, uploadProfilePicture);
+router.post('/upload-profile-picture',auth,upload.single("profilePicture"), uploadProfilePicture);
 
 // @route   PUT /api/users/change-password
 // @desc    Change user password
