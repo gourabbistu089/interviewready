@@ -5,8 +5,8 @@ const nodemailer = require('nodemailer');
 // Register user
 const register = async (req, res) => {
   try {
-    const username = req.body.firstName + req.body.lastName; // Generate username from first and last name
     const { email, password, firstName, lastName } = req.body;
+    const username = firstName + lastName; // Generate username from first and last name
 
     // Check if user already exists
     const existingUser = await User.findOne({
@@ -39,15 +39,14 @@ const register = async (req, res) => {
         pass: process.env.MAIL_PASS,
       },
     });
-    
     const url = `${process.env.BACKEND_URL}/api/auth/verify/${token}`;
-
     await transporter.sendMail({
       to: email,
       subject: "Verify Your Email",
       html: `<h3>Click the link to verify:</h3> <a href="${url}">${url}</a>`,
     });
 
+    // Send response to client 
     res.status(201).json({
       success: true,
       message: "Registered successfully. Please check your email to verify!",
@@ -72,6 +71,7 @@ const register = async (req, res) => {
   }
 };
 
+// Verify Email
 const verifyEmail = async (req, res) => {
   try {
     const token = req.params.token;

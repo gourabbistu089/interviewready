@@ -1,20 +1,21 @@
 const app = require('./app');
-const database = require("./config/database");
+const {connectDB} = require("./config/database");
 // Load environment variables
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
-// Connect to database
-database.connect();
+// Start the server after successful database connection
+connectDB()
+  .then(() => {
+    console.log("Database Connected");
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  // Clos server & exit proce\dfgdfg
-});
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection failed");
+    console.error(err);
+    process.exit(1); // optional but professional
+  });

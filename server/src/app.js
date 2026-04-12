@@ -1,40 +1,44 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const compression = require('compression');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-
-
-const Subtopic = require('./models/Subtopic');
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const compression = require("compression");
+const rateLimit = require("express-rate-limit");
+const path = require("path");
+const cookieParser = require("cookie-parser");
 
 // Route imports
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
-const topicRoutes = require('./routes/topics');
-const questionRoutes = require('./routes/questions');
-const blogRoutes = require('./routes/blogs');
-const adminRoutes = require('./routes/admin');
-const progressRoutes = require('./routes/progress');
-const interviewRoutes = require('./routes/interview');
-const aiQuizRoutes = require('./routes/aiQuize');
-const cheatsheetRoutes = require('./routes/cheetsheet');
-const chatbotRoutes = require('./routes/chatbot');
-const testRoutes = require('./routes/test');
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+const topicRoutes = require("./routes/topics");
+const questionRoutes = require("./routes/questions");
+const blogRoutes = require("./routes/blogs");
+const articleRoute = require("./routes/article");
+const adminRoutes = require("./routes/admin");
+const progressRoutes = require("./routes/progress");
+const interviewRoutes = require("./routes/interview");
+const aiQuizRoutes = require("./routes/aiQuize");
+const cheatsheetRoutes = require("./routes/cheetsheet");
+const chatbotRoutes = require("./routes/chatbot");
+const testRoutes = require("./routes/test");
 
-require('dotenv').config(); 
+require("dotenv").config();
 
 const app = express();
 
 // Security middleware
 app.use(helmet());
-app.use(cors({
-  origin: ['http://localhost:5174','http://localhost:5173',process.env.FRONTEND_URL, process.env.ADMIN_URL],
-  credentials: true
-}));
-
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5174",
+      "http://localhost:5173",
+      process.env.FRONTEND_URL,
+      process.env.ADMIN_URL,
+    ],
+    credentials: true,
+  })
+);
 
 // const updateAllSubtopics = async () => {
 //   try {
@@ -42,7 +46,7 @@ app.use(cors({
 //       { magicNotes: { $exists: false } }, // Only update documents that don't have magicNotes field
 //       { $set: { magicNotes: '' } }
 //     );
-    
+
 //     console.log(`Updated ${result.modifiedCount} documents`);
 //     return result;
 //   } catch (error) {
@@ -52,64 +56,61 @@ app.use(cors({
 // };
 // updateAllSubtopics()
 
-
 // Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 // Compression middleware
 app.use(compression());
 
 // Logging middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 }
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/topics', topicRoutes);
-app.use('/api/questions', questionRoutes);
-app.use('/api/blogs', blogRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/progress', progressRoutes);
-app.use('/api/interview', interviewRoutes);
-app.use('/api/cheatsheets', cheatsheetRoutes);
-app.use('/api/ai-quiz', aiQuizRoutes);
-app.use("/api/chatbot", chatbotRoutes);        // General AI Assistant
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/topics", topicRoutes);
+app.use("/api/questions", questionRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/articles", articleRoute);
+app.use("/api/admin", adminRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/interview", interviewRoutes);
+app.use("/api/cheatsheets", cheatsheetRoutes);
+app.use("/api/ai-quiz", aiQuizRoutes);
+app.use("/api/chatbot", chatbotRoutes); // General AI Assistant
 
-app.use('/api/test', testRoutes);
+app.use("/api/test", testRoutes);
 
 // Health check route
-app.get('/api/health', (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
   });
 });
 
 // Handle 404 routes
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: "Route not found",
   });
 });
 
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {
-  console.error('💥 Server Error:', err);
+  console.error("💥 Server Error:", err);
 
   // Handle specific Gemini quota error
   if (err?.status === 429 || err?.code === 429) {
     return res.status(429).json({
       success: false,
       message: "AI quota exceeded. Please wait or enable billing.",
-      details: err.message || null
+      details: err.message || null,
     });
   }
 
@@ -118,6 +119,5 @@ app.use((err, req, res, next) => {
     message: err.message || "Something went wrong on the server.",
   });
 });
-
 
 module.exports = app;

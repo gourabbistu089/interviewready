@@ -22,6 +22,10 @@ const router = express.Router();
 // @desc    Get all topics
 // @access  Public
 router.get('/', getTopics);
+
+// @route   GET /api/topics/subtopics
+// @desc    Get all subtopics
+// @access  Public
 router.get('/subtopics', getAllSubtopics);
 
 // @route   GET /api/topics/categories

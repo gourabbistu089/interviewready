@@ -37,6 +37,7 @@ const BlogEditor = ({ formData, setFormData }) => {
       [{ font: [] }],
       [{ size: ["small", false, "large", "huge"] }],
       ["bold", "italic", "underline"],
+       ['table'],
       [{ color: [] }, { background: [] }],
       [{ list: "ordered" }, { list: "bullet" }],
       [{ indent: "-1" }, { indent: "+1" }],

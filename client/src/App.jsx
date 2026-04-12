@@ -21,6 +21,7 @@ import { API_URL } from "./constants";
 import { setUser } from "./redux/features/authSlice.js";
 import OpenRoute from "./components/OpenRoute.jsx";
 import CreateBlog from "./pages/CreateBlog.jsx";
+import CreateArticle from "./pages/CreateArticle.jsx";
 import Blog from "./pages/Blog.jsx";
 import ApplicationLoader from "./components/ui/ApplicationLoader.jsx";
 import AiQuizPage from "./pages/AiQuizPage.jsx";
@@ -28,6 +29,7 @@ import CheatsheetApp from "./pages/CheatsheetApp.jsx";
 import InterviewChatbot from "./components/InterviewChatbot.jsx";
 import NotFoundPage from "./pages/NotFound404.jsx";
 import UpdateBlog from "./pages/UpdateBlog.jsx";
+import ViewArticlePage from "./pages/ViewArticlePage.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -211,6 +213,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CreateBlog />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-article"
+              element={
+                <ProtectedRoute>
+                  <CreateArticle />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/articles/:slug"
+              element={
+                <ProtectedRoute>
+                  <ViewArticlePage />
                 </ProtectedRoute>
               }
             />
