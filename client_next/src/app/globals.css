@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ─────────────────────────────────────────────────────────── */
+:root {
+  --bg-base: #080808;
+  --bg-surface: #101010;
+  --bg-elevated: #181818;
+  --accent: #e2e2e2;
+  --accent-dim: rgba(226,226,226,0.07);
+  --accent-border: rgba(226,226,226,0.18);
+  --text-primary: #e2e2e2;
+  --text-secondary: #666666;
+  --text-muted: #282828;
+  --border: rgba(255,255,255,0.07);
+  --danger: #f87171;
+  --danger-dim: rgba(248,113,113,0.08);
+  --warning: #fbbf24;
+  --success: #4ade9e;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+* { box-sizing: border-box; transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.4px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+/* ── Global Inputs ─────────────────────────────────────────────────────────── */
+input, textarea, select {
+  background: var(--bg-elevated) !important;
+  border: 0.5px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-primary) !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  outline: none !important;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent-border) !important;
+  box-shadow: 0 0 0 3px rgba(226,226,226,0.06) !important;
+}
+::placeholder { color: var(--text-muted) !important; }
+option { background: var(--bg-elevated); color: var(--text-primary); }
+
+/* ── Quill Editor Dark Theme ─────────────────────────────────────────────── */
+.ql-toolbar { background: var(--bg-elevated) !important; border-color: var(--border) !important; }
+.ql-container { background: var(--bg-surface) !important; border-color: var(--border) !important; color: var(--text-primary) !important; }
+.ql-editor { color: var(--text-primary) !important; min-height: 300px; }
+.ql-toolbar .ql-stroke { stroke: var(--text-secondary) !important; }
+.ql-toolbar .ql-fill { fill: var(--text-secondary) !important; }
+.ql-toolbar button:hover .ql-stroke { stroke: var(--accent) !important; }
+.ql-picker-label { color: var(--text-secondary) !important; }
+.ql-picker-options { background: var(--bg-elevated) !important; border-color: var(--border) !important; }
+
+/* ── Toast UI Editor Dark Theme ─────────────────────────────────────────── */
+.toastui-editor-defaultUI { background: var(--bg-surface) !important; border-color: var(--border) !important; }
+.toastui-editor-toolbar { background: var(--bg-elevated) !important; border-color: var(--border) !important; }
+.toastui-editor-contents { color: var(--text-primary) !important; }
+.toastui-editor-md-container { background: var(--bg-surface) !important; }
+.toastui-editor-preview-style-tab { background: var(--bg-elevated) !important; }
+.toastui-editor-defaultUI .ProseMirror { background: var(--bg-surface) !important; color: var(--text-primary) !important; }
+
+/* ── Blog content (Quill output) ─────────────────────────────────────────── */
+.blog-content { color: var(--text-secondary); font-size: 15px; line-height: 1.8; }
+.blog-content h1 { font-family: 'Syne', sans-serif; color: #ffffff; font-size: 1.875rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; }
+.blog-content h2 { font-family: 'Syne', sans-serif; color: #ffffff; font-size: 1.5rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.blog-content h3 { font-family: 'Syne', sans-serif; color: #ffffff; font-size: 1.25rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+.blog-content p { margin-bottom: 1rem; }
+.blog-content ul { list-style: disc inside; margin-bottom: 1rem; margin-left: 1rem; }
+.blog-content ol { list-style: decimal inside; margin-bottom: 1rem; margin-left: 1rem; }
+.blog-content a { color: var(--accent); text-decoration: none; }
+.blog-content a:hover { text-decoration: underline; }
+.blog-content blockquote { border-left: 2px solid var(--accent-border); padding-left: 1rem; color: var(--text-muted); margin: 1rem 0; }
+.blog-content pre { background: var(--bg-elevated); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+.blog-content code { background: var(--bg-elevated); border: 0.5px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 13px; color: var(--accent); }
+.blog-content pre code { background: transparent; border: none; padding: 0; }
+.blog-content img { border-radius: var(--radius-md); max-width: 100%; height: auto; margin: 1rem 0; }
+
+/* ── Prose (article/blog view) ───────────────────────────────────────────── */
+.prose { color: var(--text-secondary); font-size: 15px; line-height: 1.8; }
+.prose h1, .prose h2, .prose h3 { font-family: 'Syne', sans-serif; color: #ffffff; margin: 1.5em 0 0.5em; }
+.prose a { color: var(--accent); text-decoration: none; }
+.prose code { background: var(--bg-elevated); border: 0.5px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+.prose pre { background: var(--bg-elevated); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 1rem; overflow-x: auto; }
+.prose blockquote { border-left: 2px solid var(--accent-border); padding-left: 1rem; color: var(--text-muted); }
+.prose img { border-radius: var(--radius-md); max-width: 100%; }
+
+/* ── Quill code block copy button ────────────────────────────────────────── */
+.ql-code-block-container { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px; padding: 4px 10px;
+  background: var(--bg-elevated); color: var(--text-secondary);
+  border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 12px; cursor: pointer; z-index: 10;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent-border); }

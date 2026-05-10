@@ -3,8 +3,16 @@
 /.svelte-kit
 /package
 .env
-.env.*      
+.env.*
 .cpp
 .exe
 
+# Claude Code / AI tool files
 CLAUDE.md
+.claude/
+
+# Playwright MCP logs
+.playwright-mcp/
+
+# Test screenshots
+test-*.png
