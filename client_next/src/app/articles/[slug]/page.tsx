@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 import 'highlight.js/styles/github-dark.css';
 import axios from 'axios';
 import { API_URL } from '@/constants';
@@ -69,7 +70,7 @@ export default function ViewArticlePage() {
         <article className="markdown-content">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeHighlight]}
+            rehypePlugins={[rehypeRaw, rehypeHighlight]}
             components={{
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               h1: ({ node, ...props }) => <h1 style={{ color: '#ffffff', fontFamily: 'Syne, sans-serif', fontSize: '1.75rem', fontWeight: 700, marginTop: '2rem', marginBottom: '1rem' }} {...props} />,
@@ -129,6 +130,25 @@ export default function ViewArticlePage() {
               td: ({ node, ...props }) => <td style={{ border: '0.5px solid var(--border)', padding: '0.5rem 1rem', color: 'var(--text-secondary)' }} {...props} />,
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               hr: ({ node, ...props }) => <hr style={{ margin: '2rem 0', borderColor: 'var(--border)' }} {...props} />,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              iframe: ({ src, ...props }: any) => {
+                const isYouTube =
+                  typeof src === 'string' &&
+                  (src.startsWith('https://www.youtube.com/embed/') ||
+                    src.startsWith('https://www.youtube-nocookie.com/embed/'));
+                if (!isYouTube) return null;
+                return (
+                  <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '10px', margin: '1.5rem 0', border: '0.5px solid var(--border)' }}>
+                    <iframe
+                      src={src}
+                      title={props.title ?? 'YouTube video'}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none', borderRadius: '10px' }}
+                    />
+                  </div>
+                );
+              },
             }}
           >
             {article.content}

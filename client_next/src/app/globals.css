@@ -59,7 +59,7 @@ input:focus, textarea:focus, select:focus {
   border-color: var(--accent-border) !important;
   box-shadow: 0 0 0 3px rgba(226,226,226,0.06) !important;
 }
-::placeholder { color: var(--text-muted) !important; }
+::placeholder { color: #4a4a4a !important; }
 option { background: var(--bg-elevated); color: var(--text-primary); }
 
 /* ── Quill Editor Dark Theme ─────────────────────────────────────────────── */
@@ -73,12 +73,93 @@ option { background: var(--bg-elevated); color: var(--text-primary); }
 .ql-picker-options { background: var(--bg-elevated) !important; border-color: var(--border) !important; }
 
 /* ── Toast UI Editor Dark Theme ─────────────────────────────────────────── */
-.toastui-editor-defaultUI { background: var(--bg-surface) !important; border-color: var(--border) !important; }
-.toastui-editor-toolbar { background: var(--bg-elevated) !important; border-color: var(--border) !important; }
-.toastui-editor-contents { color: var(--text-primary) !important; }
-.toastui-editor-md-container { background: var(--bg-surface) !important; }
-.toastui-editor-preview-style-tab { background: var(--bg-elevated) !important; }
-.toastui-editor-defaultUI .ProseMirror { background: var(--bg-surface) !important; color: var(--text-primary) !important; }
+
+/* Outer shell */
+.toastui-editor-defaultUI { background: var(--bg-surface) !important; border: none !important; color: var(--text-primary) !important; }
+
+/* Toolbar */
+.toastui-editor-toolbar,
+.toastui-editor-defaultUI-toolbar { background: var(--bg-elevated) !important; border-bottom: 0.5px solid var(--border) !important; padding: 4px 6px !important; }
+.toastui-editor-toolbar-group button,
+.toastui-editor-toolbar button { background-color: transparent !important; color: var(--text-secondary) !important; border-radius: 4px !important; }
+.toastui-editor-toolbar-group button:hover,
+.toastui-editor-toolbar button:hover { background-color: var(--accent-dim) !important; color: var(--accent) !important; }
+.toastui-editor-toolbar-group button.active,
+.toastui-editor-toolbar button.active,
+.toastui-editor-toolbar-group button[aria-pressed="true"],
+.toastui-editor-toolbar button[aria-pressed="true"] { background-color: var(--accent-dim) !important; color: var(--text-primary) !important; }
+.toastui-editor-toolbar-group button svg,
+.toastui-editor-toolbar button svg { fill: currentColor !important; }
+.toastui-editor-toolbar-divider { background: var(--border) !important; }
+
+/* WYSIWYG writing area */
+.toastui-editor-ww-container,
+.toastui-editor-ww-container .toastui-editor,
+.toastui-editor-defaultUI .toastui-editor { background: var(--bg-surface) !important; }
+.toastui-editor-defaultUI .ProseMirror,
+.ProseMirror { background: var(--bg-surface) !important; color: #c8c8c8 !important; padding: 16px !important; caret-color: var(--accent) !important; font-family: 'DM Sans', sans-serif !important; font-size: 14px !important; line-height: 1.8 !important; }
+.toastui-editor-contents p,.ProseMirror p { color: #c8c8c8 !important; }
+.toastui-editor-contents h1,.toastui-editor-contents h2,.toastui-editor-contents h3,
+.ProseMirror h1,.ProseMirror h2,.ProseMirror h3 { color: #ffffff !important; font-family: 'Syne', sans-serif !important; }
+.toastui-editor-contents a,.ProseMirror a { color: var(--accent) !important; }
+.toastui-editor-contents strong,.ProseMirror strong { color: #ffffff !important; }
+.toastui-editor-contents em,.ProseMirror em { color: #aaaaaa !important; }
+.toastui-editor-contents code,.ProseMirror code { background: var(--bg-elevated) !important; color: var(--accent) !important; border: 0.5px solid var(--border) !important; border-radius: 4px !important; padding: 2px 5px !important; }
+.toastui-editor-contents pre,.ProseMirror pre { background: #0a0a0a !important; border: 0.5px solid var(--border) !important; border-radius: 8px !important; padding: 12px !important; }
+.toastui-editor-contents pre code,.ProseMirror pre code { background: transparent !important; border: none !important; color: #c8c8c8 !important; }
+.toastui-editor-contents blockquote,.ProseMirror blockquote { border-left: 2px solid var(--accent-border) !important; color: #888 !important; background: transparent !important; }
+.toastui-editor-contents ul,.toastui-editor-contents ol,.ProseMirror ul,.ProseMirror ol { color: #c8c8c8 !important; }
+
+/* Markdown editor — CodeMirror dark */
+.toastui-editor-md-container,
+.toastui-editor-md-container .toastui-editor,
+.toastui-editor-md-container .cm-editor,
+.toastui-editor-md-container .cm-scroller,
+.toastui-editor-md-container .cm-wrap { background: var(--bg-surface) !important; }
+.toastui-editor-md-container .cm-content { background: var(--bg-surface) !important; color: #c8c8c8 !important; caret-color: var(--accent) !important; }
+.toastui-editor-md-container .cm-line { color: #c8c8c8 !important; }
+.toastui-editor-md-container .cm-gutters { background: var(--bg-elevated) !important; color: var(--text-secondary) !important; border-right: 0.5px solid var(--border) !important; }
+.toastui-editor-md-container .cm-activeLine,
+.toastui-editor-md-container .cm-activeLineGutter { background: rgba(226,226,226,0.04) !important; }
+/* Code fence lines in markdown editor */
+.toastui-editor-md-container .toastui-editor-md-code-block-line-background { background: #0d0d0d !important; }
+.toastui-editor-md-container [class*="toastui-editor-md-code"] { color: #c8c8c8 !important; }
+.toastui-editor-md-container .toastui-editor-md-heading1,
+.toastui-editor-md-container .toastui-editor-md-heading2,
+.toastui-editor-md-container .toastui-editor-md-heading3 { color: #ffffff !important; }
+
+/* Markdown preview pane (right side in split view) */
+.toastui-editor-md-preview { background: var(--bg-surface) !important; color: #c8c8c8 !important; padding: 16px !important; }
+.toastui-editor-md-preview h1,.toastui-editor-md-preview h2,.toastui-editor-md-preview h3 { color: #ffffff !important; font-family: 'Syne', sans-serif !important; }
+.toastui-editor-md-preview p { color: #c8c8c8 !important; }
+.toastui-editor-md-preview a { color: var(--accent) !important; }
+.toastui-editor-md-preview code { background: var(--bg-elevated) !important; color: var(--accent) !important; border: 0.5px solid var(--border) !important; border-radius: 4px !important; padding: 2px 5px !important; }
+.toastui-editor-md-preview pre { background: #0a0a0a !important; border: 0.5px solid var(--border) !important; border-radius: 8px !important; padding: 12px !important; }
+.toastui-editor-md-preview pre code { background: transparent !important; border: none !important; color: #c8c8c8 !important; }
+/* highlight.js blocks inside preview */
+.toastui-editor-md-preview .hljs { background: #0a0a0a !important; color: #c8c8c8 !important; }
+.toastui-editor-md-preview blockquote { border-left: 2px solid var(--accent-border) !important; color: #888 !important; background: transparent !important; }
+
+/* Write/Preview tabs (markdown mode) */
+.toastui-editor-md-tab-container { background: var(--bg-elevated) !important; }
+.toastui-editor-tabs { background: var(--bg-elevated) !important; border-bottom: 0.5px solid var(--border) !important; }
+.toastui-editor-tabs .tab-item,
+.toastui-editor-tabs li { padding: 6px 16px !important; background-color: transparent !important; color: var(--text-secondary) !important; cursor: pointer !important; border-bottom: 2px solid transparent !important; }
+.toastui-editor-tabs .tab-item.active,
+.toastui-editor-tabs li.active { background-color: transparent !important; color: var(--text-primary) !important; border-bottom-color: var(--text-primary) !important; }
+
+/* Markdown/WYSIWYG mode switch (bottom) */
+.toastui-editor-mode-switch { background: var(--bg-elevated) !important; border-top: 0.5px solid var(--border) !important; }
+.toastui-editor-mode-switch .tab-item { background-color: var(--bg-surface) !important; color: var(--text-secondary) !important; border: 0.5px solid var(--border) !important; }
+.toastui-editor-mode-switch .tab-item.active { background-color: var(--bg-elevated) !important; color: var(--text-primary) !important; border-color: var(--accent-border) !important; }
+
+/* Popups / dialogs */
+.toastui-editor-popup { background: var(--bg-elevated) !important; border: 0.5px solid var(--border) !important; border-radius: 8px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important; }
+.toastui-editor-popup-body { background: var(--bg-elevated) !important; border: none !important; }
+.toastui-editor-popup-body label { color: var(--text-secondary) !important; font-size: 12px !important; }
+.toastui-editor-popup-body input { background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 0.5px solid var(--border) !important; border-radius: 6px !important; }
+.toastui-editor-ok-button { background: var(--accent) !important; color: #080808 !important; border: none !important; border-radius: 6px !important; font-weight: 600 !important; }
+.toastui-editor-close-button { color: var(--text-secondary) !important; }
 
 /* ── Blog content (Quill output) ─────────────────────────────────────────── */
 .blog-content { color: var(--text-secondary); font-size: 15px; line-height: 1.8; }

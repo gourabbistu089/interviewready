@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 const BASE_URL = 'https://interviewready-xi.vercel.app';
-const API_URL  = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:5000/api';
+const API_URL  = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:5001/api';
 
 interface BlogEntry { _id: string; updatedAt?: string; createdAt?: string; }
 interface ArticleEntry { slug: string; updatedAt?: string; createdAt?: string; }

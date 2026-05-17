@@ -69,10 +69,10 @@ const getArticlesByCategory = async (req, res) => {
 // Update an article
 const updateArticle = async (req, res) => {
     try {
-        const { slug } = req.params;
-        const {content, category } = req.body;
-        const article = await Article.findOneAndUpdate(
-            { slug },
+        const { id } = req.params;
+        const { content, category } = req.body;
+        const article = await Article.findByIdAndUpdate(
+            id,
             { content, category },
             { new: true }
         ).populate('author', 'username email');
@@ -92,8 +92,8 @@ const updateArticle = async (req, res) => {
 // Delete an article
 const deleteArticle = async (req, res) => {
     try {
-        const { slug } = req.params;
-        const article = await Article.findOneAndDelete({ slug });
+        const { id } = req.params;
+        const article = await Article.findByIdAndDelete(id);
         if (!article) {
             return res.status(404).json({ message: 'Article not found' });
         }
@@ -102,10 +102,11 @@ const deleteArticle = async (req, res) => {
             message: 'Article deleted successfully'
         });
     } catch (error) {
-        console.log("Error while deleteArticle ",error)
-        res.status(500).json({ 
-            success:false,
-            message: error.message });
+        console.log("Error while deleteArticle ", error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
