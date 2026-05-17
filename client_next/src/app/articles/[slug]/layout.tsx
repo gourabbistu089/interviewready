@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-const API_URL  = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:5000/api';
+const API_URL  = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:5001/api';
 const BASE_URL = 'https://interviewready-xi.vercel.app';
 
 interface ArticleData {
